@@ -1,38 +1,22 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { createGlobalStyle } from 'styled-components';
+import { createStore } from 'redux';
+import { Provider } from 'react-redux';
 import App from './App';
+import allReducers from './reducers';
 
-const GlobalStyle = createGlobalStyle`
-  @import url('https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;700&display=swap');
-
-  :root {
-    --azul: #213c83;
-    --verde: #24b3b5;
-  }
-
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    list-style: none;
-    text-decoration: none;
-  }
-
-  body {
-    font-family: 'Rubik', sans-serif;
-  }
-
-  .container {
-    width: 90%;
-    margin: auto;
-  }
-`;
+const store = createStore(
+  allReducers,
+  typeof window !== 'undefined'
+    && window.__REDUX_DEVTOOLS_EXTENSION__
+    && window.__REDUX_DEVTOOLS_EXTENSION__(),
+);
 
 ReactDOM.render(
   <React.StrictMode>
-    <GlobalStyle />
-    <App />
+    <Provider store={store}>
+      <App />
+    </Provider>
   </React.StrictMode>,
   document.getElementById('root'),
 );

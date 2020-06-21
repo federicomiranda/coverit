@@ -23,7 +23,7 @@ const Bar = styled.div`
     width: 10%;
   }
   &.p20::after {
-    width: 10%;
+    width: 20%;
   }
 `;
 

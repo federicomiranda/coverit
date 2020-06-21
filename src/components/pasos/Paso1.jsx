@@ -1,37 +1,59 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import { useDispatch } from 'react-redux';
 import ProgressBar from '../ProgressBar';
 import MotoIcon from '../MotoIcon';
 import AutoIcon from '../AutoIcon';
+import { selectMoto, selectAuto } from '../../actions';
 
-const Paso1 = () => (
-  <>
-    <Container>
-      <ProgressBar percentaje="p10" />
+const Paso1 = () => {
+  const dispatch = useDispatch();
 
-      <Title>
-        ¿Qué vas a
-        {' '}
-        <TitleMod>cotizar</TitleMod>
-        ?
-      </Title>
+  const handleClick = (vehiculo) => {
+    if (vehiculo === 'moto') {
+      dispatch(selectMoto());
+    } else if (vehiculo === 'auto') {
+      dispatch(selectAuto());
+    }
+  };
 
-      <OptionsList>
-        <OptionsListItem>
-          <Link className="link" to="/2/moto/">
-            <MotoIcon />
-          </Link>
-        </OptionsListItem>
-        <OptionsListItem>
-          <Link className="link" to="/2/auto/">
-            <AutoIcon />
-          </Link>
-        </OptionsListItem>
-      </OptionsList>
-    </Container>
-  </>
-);
+  return (
+    <>
+      <Container>
+        <ProgressBar percentaje="p10" />
+
+        <Title>
+          ¿Qué vas a
+          {' '}
+          <TitleMod>cotizar</TitleMod>
+          ?
+        </Title>
+
+        <OptionsList>
+          <OptionsListItem>
+            <Link
+              className="link"
+              to="/2/"
+              onClick={() => handleClick('moto')}
+            >
+              <MotoIcon />
+            </Link>
+          </OptionsListItem>
+          <OptionsListItem>
+            <Link
+              className="link"
+              to="/2/"
+              onClick={() => handleClick('auto')}
+            >
+              <AutoIcon />
+            </Link>
+          </OptionsListItem>
+        </OptionsList>
+      </Container>
+    </>
+  );
+};
 
 export default Paso1;
 
