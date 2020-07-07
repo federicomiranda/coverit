@@ -41,6 +41,7 @@ const GlobalStyle = createGlobalStyle`
   :root {
     --azul: #213c83;
     --verde: #24b3b5;
+    --gris: #5f5f5f;
   }
 
   * {
