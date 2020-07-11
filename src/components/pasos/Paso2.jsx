@@ -1,15 +1,28 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Redirect } from 'react-router-dom';
+import { Redirect, Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSortDown } from '@fortawesome/free-solid-svg-icons';
 import ProgressBar from '../ProgressBar';
+import Select from '../Select';
+
+const localidades = [
+  'Localidad 1',
+  'Localidad 2',
+  'Localidad 3',
+];
 
 const Paso2 = () => {
   const vehiculo = useSelector((state) => state.vehiculo);
-  const [loc, setLoc] = useState(false);
+  const [cp, setCp] = useState('');
   const [locElegida, setLocElegida] = useState('');
+
+  const elegirLocalidad = (value) => {
+    setLocElegida(value);
+  };
+
+  const handleChangeCP = (e) => {
+    setCp(e.target.value);
+  };
 
   return (
     <>
@@ -35,6 +48,7 @@ const Paso2 = () => {
                 name="cp"
                 id="cp"
                 placeholder="Código Postal"
+                onChange={handleChangeCP}
               />
               <LabelCP htmlFor="cp">
                 Si no conoces tu código postal, buscalo
@@ -42,222 +56,29 @@ const Paso2 = () => {
                 <AnchorCP href="/">aquí</AnchorCP>
               </LabelCP>
             </FieldSeparator>
-            <FieldSeparator>
-              <LabelLocalidad
-                htmlFor="localidad"
-                onClick={() => {
-                  setLoc(true);
-                }}
-              >
-                {locElegida || 'Localidad'}
-                {' '}
-                <LocIconContainer>
-                  <FontAwesomeIcon icon={faSortDown} />
-                </LocIconContainer>
-              </LabelLocalidad>
-            </FieldSeparator>
 
-            {loc && (
-              <ModalLocalidades>
-                <ItemModalLocalidades
-                  onClick={() => {
-                    setLoc(false);
-                    setLocElegida('Localidad 1');
-                  }}
-                >
-                  Localidad 1
-                  <InputModalLocalidades
-                    type="radio"
-                    name="localidad"
-                    value="localidad 1"
-                  />
-                </ItemModalLocalidades>
-                <ItemModalLocalidades>
-                  Localidad 2
-                  <InputModalLocalidades
-                    type="radio"
-                    name="localidad"
-                    value="localidad 2"
-                  />
-                </ItemModalLocalidades>
-                <ItemModalLocalidades>
-                  Localidad 3
-                  <InputModalLocalidades
-                    type="radio"
-                    name="localidad"
-                    value="localidad 3"
-                  />
-                </ItemModalLocalidades>
-                <ItemModalLocalidades>
-                  Localidad 4
-                  <InputModalLocalidades
-                    type="radio"
-                    name="localidad"
-                    value="localidad 4"
-                  />
-                </ItemModalLocalidades>
-                <ItemModalLocalidades>
-                  Localidad 4
-                  <InputModalLocalidades
-                    type="radio"
-                    name="localidad"
-                    value="localidad 4"
-                  />
-                </ItemModalLocalidades>
-                <ItemModalLocalidades>
-                  Localidad 4
-                  <InputModalLocalidades
-                    type="radio"
-                    name="localidad"
-                    value="localidad 4"
-                  />
-                </ItemModalLocalidades>
-                <ItemModalLocalidades>
-                  Localidad 4
-                  <InputModalLocalidades
-                    type="radio"
-                    name="localidad"
-                    value="localidad 4"
-                  />
-                </ItemModalLocalidades>
-                <ItemModalLocalidades>
-                  Localidad 4
-                  <InputModalLocalidades
-                    type="radio"
-                    name="localidad"
-                    value="localidad 4"
-                  />
-                </ItemModalLocalidades>
-                <ItemModalLocalidades>
-                  Localidad 4
-                  <InputModalLocalidades
-                    type="radio"
-                    name="localidad"
-                    value="localidad 4"
-                  />
-                </ItemModalLocalidades>
-                <ItemModalLocalidades>
-                  Localidad 4
-                  <InputModalLocalidades
-                    type="radio"
-                    name="localidad"
-                    value="localidad 4"
-                  />
-                </ItemModalLocalidades>
-                <ItemModalLocalidades>
-                  Localidad 4
-                  <InputModalLocalidades
-                    type="radio"
-                    name="localidad"
-                    value="localidad 4"
-                  />
-                </ItemModalLocalidades>
-                <ItemModalLocalidades>
-                  Localidad 4
-                  <InputModalLocalidades
-                    type="radio"
-                    name="localidad"
-                    value="localidad 4"
-                  />
-                </ItemModalLocalidades>
-                <ItemModalLocalidades>
-                  Localidad 4
-                  <InputModalLocalidades
-                    type="radio"
-                    name="localidad"
-                    value="localidad 4"
-                  />
-                </ItemModalLocalidades>
-                <ItemModalLocalidades>
-                  Localidad 4
-                  <InputModalLocalidades
-                    type="radio"
-                    name="localidad"
-                    value="localidad 4"
-                  />
-                </ItemModalLocalidades>
-                <ItemModalLocalidades>
-                  Localidad 4
-                  <InputModalLocalidades
-                    type="radio"
-                    name="localidad"
-                    value="localidad 4"
-                  />
-                </ItemModalLocalidades>
-                <ItemModalLocalidades>
-                  Localidad 4
-                  <InputModalLocalidades
-                    type="radio"
-                    name="localidad"
-                    value="localidad 4"
-                  />
-                </ItemModalLocalidades>
-                <ItemModalLocalidades>
-                  Localidad 4
-                  <InputModalLocalidades
-                    type="radio"
-                    name="localidad"
-                    value="localidad 4"
-                  />
-                </ItemModalLocalidades>
-                <ItemModalLocalidades>
-                  Localidad 4
-                  <InputModalLocalidades
-                    type="radio"
-                    name="localidad"
-                    value="localidad 4"
-                  />
-                </ItemModalLocalidades>
-                <ItemModalLocalidades>
-                  Localidad 4
-                  <InputModalLocalidades
-                    type="radio"
-                    name="localidad"
-                    value="localidad 4"
-                  />
-                </ItemModalLocalidades>
-                <ItemModalLocalidades>
-                  Localidad 4
-                  <InputModalLocalidades
-                    type="radio"
-                    name="localidad"
-                    value="localidad 4"
-                  />
-                </ItemModalLocalidades>
-                <ItemModalLocalidades>
-                  Localidad 4
-                  <InputModalLocalidades
-                    type="radio"
-                    name="localidad"
-                    value="localidad 4"
-                  />
-                </ItemModalLocalidades>
-                <ItemModalLocalidades>
-                  Localidad 4
-                  <InputModalLocalidades
-                    type="radio"
-                    name="localidad"
-                    value="localidad 4"
-                  />
-                </ItemModalLocalidades>
-                <ItemModalLocalidades>
-                  Localidad 4
-                  <InputModalLocalidades
-                    type="radio"
-                    name="localidad"
-                    value="localidad 4"
-                  />
-                </ItemModalLocalidades>
-                <ItemModalLocalidades>
-                  Localidad 4
-                  <InputModalLocalidades
-                    type="radio"
-                    name="localidad"
-                    value="localidad 4"
-                  />
-                </ItemModalLocalidades>
-              </ModalLocalidades>
-            )}
+            <Select
+              state={!(!cp || cp.length < 3)}
+              type="Localidades"
+              name="localidades"
+              options={localidades}
+              elegirOpcion={elegirLocalidad}
+            />
+
+            <Disclaimer>
+              Coberturas previstas solo para vehículos particulares
+            </Disclaimer>
+
+            <Btns>
+              <BtnBack>
+                <Link to="/">Volver</Link>
+              </BtnBack>
+
+              <BtnContinue className={!locElegida ? 'disabled' : ''}>
+                {/* <BtnContinue> */}
+                <Link to="/3/">Continuar</Link>
+              </BtnContinue>
+            </Btns>
           </Form>
         </Container>
       )}
@@ -321,53 +142,47 @@ const AnchorCP = styled.a`
   color: var(--azul);
 `;
 
-const LabelLocalidad = styled.label`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  font-size: 18px;
-  color: var(--gris);
-  padding: 5px;
-  border: 1px solid var(--verde);
+const Disclaimer = styled.p`
+  color: var(--azul);
+  font-size: 14px;
+  width: 60%;
+  margin: 64px auto 24px;
+  text-align: center;
 `;
 
-const LocIconContainer = styled.div`
-  background: var(--verde);
-  height: 22px;
-  width: 22px;
+const Btns = styled.div`
   display: flex;
   justify-content: center;
-  color: #fff;
+`;
 
-  & svg {
-    position: relative;
-    top: -2px;
+const BtnBack = styled.button`
+  background: none;
+  border: none;
+  margin-right: 20px;
+  
+  & a {
+    color: var(--verde);
+    font-size: 16px;
+    text-transform: uppercase;
   }
 `;
 
-const ModalLocalidades = styled.div`
-  position: fixed;
-  width: 80%;
-  height: 80vh;
-  left: 10%;
-  top: 10vh;
-  background: rgba(0, 0, 0, 0.8);
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  overflow-y: scroll;
-`;
+const BtnContinue = styled.div`
+  background: var(--verde);
+  border: none;
+  padding: 10px 20px;
 
-const ItemModalLocalidades = styled.label`
-  display: block;
-  width: 100%;
-  color: #fff;
-  padding: 10px 0;
-  font-size: 18px;
-`;
+  &.disabled {
+    background: var(--verde-disabled);
+  }
 
-const InputModalLocalidades = styled.label`
-  display: none;
+  & a {
+    color: #fff;
+    font-size: 16px;
+    text-transform: uppercase;
+  }
+
+  &.disabled a {
+    pointer-events: none;
+  }
 `;
