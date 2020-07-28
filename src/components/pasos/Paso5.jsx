@@ -56,7 +56,7 @@ const Paso5 = () => {
         <Redirect to="/" />
       ) : (
         <Container>
-          <ProgressBar percentaje="p5" />
+          <ProgressBar percentaje="p5" value="5 de 6" />
 
           <Title>
             <TitleMod>{cliente.nombre}</TitleMod>

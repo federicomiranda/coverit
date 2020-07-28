@@ -21,7 +21,7 @@ const Paso1 = () => {
   return (
     <>
       <Container>
-        <ProgressBar percentaje="p1" />
+        <ProgressBar percentaje="p1" value="1 de 6" />
 
         <Title>
           ¿Qué vas a

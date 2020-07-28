@@ -55,7 +55,7 @@ const Paso4 = () => {
         <Redirect to="/" />
       ) : (
         <Container>
-          <ProgressBar percentaje="p4" />
+          <ProgressBar percentaje="p4" value="4 de 6" />
 
           <Title>
             <TitleMod>Pasanos</TitleMod>

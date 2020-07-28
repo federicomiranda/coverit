@@ -16,7 +16,8 @@ const Paso2 = () => {
   const reduxLoc = useSelector((state) => state.loc);
   const token = useSelector((state) => state.token);
   const [cp, setCp] = useState(reduxCP || '');
-  const [locElegida, setLocElegida] = useState(reduxLoc || '');
+  const [locElegida, setLocElegida] = useState(reduxLoc.locElegida || '');
+  const [idLocElegida, setIdLocElegida] = useState(null);
   const [localidades, setLocalidades] = useState([]);
 
   const BASE_URL = process.env.REACT_APP_API_URL;
@@ -43,11 +44,12 @@ const Paso2 = () => {
 
   const saveData = () => {
     dispatch(setCP(cp));
-    dispatch(setLoc(locElegida));
+    dispatch(setLoc({ idLocElegida, locElegida }));
   };
 
   const elegirLocalidad = (value, id) => {
     setLocElegida(value);
+    setIdLocElegida(id);
   };
 
   const handleChangeCP = (e) => {
@@ -63,7 +65,7 @@ const Paso2 = () => {
         <Redirect to="/" />
       ) : (
         <Container>
-          <ProgressBar percentaje="p2" />
+          <ProgressBar percentaje="p2" value="2 de 6" />
 
           <Title>
             ¿Dónde usas

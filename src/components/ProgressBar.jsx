@@ -1,16 +1,20 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const Bar = styled.div`
+const ProgressBar = ({ percentaje, value }) => {
+  const Bar = styled.div`
   width: 100%;
   background: #bee1dd;
-  height: 15px;
+  height: 20px;
   border-radius: 3px;
   position: relative;
   overflow: hidden;
   &::after {
-    content: "";
-    display: block;
+    content: "${(props) => (value || '')}";
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
     height: 100%;
     width: 0;
     background: #8dcbc3;
@@ -18,6 +22,7 @@ const Bar = styled.div`
     left: 0;
     top: 0;
     transition: width 0.5s;
+    color: #fff;
   }
   &.p1::after {
     width: 16.66%;
@@ -39,6 +44,7 @@ const Bar = styled.div`
   }
 `;
 
-const ProgressBar = ({ percentaje }) => <Bar className={`Bar ${percentaje}`} />;
+  return <Bar className={`Bar ${percentaje}`} />;
+};
 
 export default ProgressBar;

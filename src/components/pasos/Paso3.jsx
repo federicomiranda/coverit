@@ -153,7 +153,7 @@ const Paso2 = () => {
         <Redirect to="/" />
       ) : (
         <Container>
-          <ProgressBar percentaje="p3" />
+          <ProgressBar percentaje="p3" value="3 de 6" />
 
           <Title>
             ¿Qué

@@ -18,28 +18,28 @@ const Paso6 = () => {
   const asegurar = useSelector((state) => state.asegurar);
   const sumaAsegurada = useSelector((state) => state.sumaAsegurada);
   const cp = useSelector((state) => state.cp);
+  const localidad = useSelector((state) => state.loc);
 
   const BASE_URL = process.env.REACT_APP_API_URL;
 
-  // useEffect(() => {
-  //   fetch(
-  //     `${BASE_URL}/suma-asegurada?version_id=${asegurar.idVersionElegida}&anio=${asegurar.anioElegido}`,
-  //     {
-  //       method: 'POST',
-  //       headers: {
-  //         Authorization: `Bearer ${token}`,
-  //         'Content-Type': 'application/x-www-form-urlencoded',
-  //       },
-  //       redirect: 'follow',
-  //     },
-  //   )
-  //     .then((response) => response.json())
-  //     .then((result) => {
-  //       setSumaAsegurada(result.suma_asegurada);
-  //       dispatch(setSA(result.suma_asegurada));
-  //     })
-  //     .catch((error) => console.log('error', error));
-  // }, []);
+  useEffect(() => {
+    fetch(
+      `${BASE_URL}/cotizar?nombre=${cliente.nombre}&apellido=${cliente.apellido}&edad=${cliente.edad}&email=${cliente.email}&celular=${cliente.tel}&localidad_id=${localidad.idLocElegida}&version_id=${asegurar.idVersionElegida}&anio=${asegurar.anioElegido}&tipo=vehiculo&tipo_uso=particular`,
+      {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        redirect: 'follow',
+      },
+    )
+      .then((response) => response.json())
+      .then((result) => {
+        console.log(result);
+      })
+      .catch((error) => console.log('error', error));
+  }, []);
 
   return (
     <>
@@ -47,7 +47,7 @@ const Paso6 = () => {
         <Redirect to="/" />
       ) : (
         <Container>
-          <ProgressBar percentaje="p5" />
+          <ProgressBar percentaje="p6" value="6 de 6" />
 
           <Title>
             <TitleMod>{cliente.nombre}</TitleMod>
