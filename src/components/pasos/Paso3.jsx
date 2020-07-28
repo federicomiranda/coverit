@@ -1,36 +1,150 @@
-import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { Redirect, Link } from 'react-router-dom';
 import styled from 'styled-components';
 import ProgressBar from '../ProgressBar';
 import Select from '../Select';
-
-const marcas = ['Marca 1', 'Marca 2', 'Marca 3'];
-const modelos = ['Modelo 1', 'Modelo 2', 'Modelo 3'];
-const anios = ['Año 1', 'Año 2', 'Año 3'];
-const versiones = ['Versión 1', 'Versión 2', 'Versión 3'];
+import {
+  setVehiculoAsegurar,
+} from '../../actions';
 
 const Paso2 = () => {
+  const dispatch = useDispatch();
   const vehiculo = useSelector((state) => state.vehiculo);
-  const [marcaElegida, setMarcaElegida] = useState('');
-  const [modeloElegido, setModeloElegido] = useState('');
-  const [anioElegido, setAnioElegido] = useState('');
-  const [versionElegida, setVersionElegida] = useState('');
+  const asegurar = useSelector((state) => state.asegurar);
 
-  const elegirMarca = (value) => {
+  const [marcaElegida, setMarcaElegida] = useState(asegurar.marcaElegida || '');
+  const [idMarcaElegida, setIdMarcaElegida] = useState(null);
+  const [modeloElegido, setModeloElegido] = useState(asegurar.modeloElegido || '');
+  const [idModeloElegido, setIdModeloElegido] = useState(null);
+  const [anioElegido, setAnioElegido] = useState(asegurar.anioElegido || '');
+  const [versionElegida, setVersionElegida] = useState(asegurar.versionElegida || '');
+  const [idVersionElegida, setIdVersionElegida] = useState(null);
+  const [gnc, setGnc] = useState(asegurar.gnc || false);
+  const [gncValue, setGncValue] = useState(asegurar.gncValue || 0);
+  const token = useSelector((state) => state.token);
+
+  const BASE_URL = process.env.REACT_APP_API_URL;
+
+  const [marcas, setMarcas] = useState([]);
+  const [modelos, setModelos] = useState([]);
+  const [anios, setAnios] = useState([]);
+  const [versiones, setVersiones] = useState([]);
+
+  useEffect(() => {
+    setMarcas([]);
+    setModelos([]);
+    setAnios([]);
+    setVersiones([]);
+    fetch(`${BASE_URL}/marcas?tipo=${vehiculo}`, {
+      method: 'POST',
+      headers: {
+        Authorization:
+            `Bearer ${token}`,
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      redirect: 'follow',
+    })
+      .then((response) => response.json())
+      .then((result) => {
+        setMarcas(result);
+      })
+      .catch((error) => console.log('error', error));
+  }, []);
+
+  useEffect(() => {
+    setModelos([]);
+    setAnios([]);
+    setVersiones([]);
+    fetch(`${BASE_URL}/modelos?brand_id=${idMarcaElegida}`, {
+      method: 'POST',
+      headers: {
+        Authorization:
+            `Bearer ${token}`,
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      redirect: 'follow',
+    })
+      .then((response) => response.json())
+      .then((result) => {
+        setModelos(result);
+      })
+      .catch((error) => console.log('error', error));
+  }, [idMarcaElegida]);
+
+  useEffect(() => {
+    setAnios([]);
+    setVersiones([]);
+    fetch(`${BASE_URL}/anios?brand_id=${idMarcaElegida}&model_id=${idModeloElegido}`, {
+      method: 'POST',
+      headers: {
+        Authorization:
+            `Bearer ${token}`,
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      redirect: 'follow',
+    })
+      .then((response) => response.json())
+      .then((result) => {
+        setAnios(result);
+      })
+      .catch((error) => console.log('error', error));
+  }, [idModeloElegido]);
+
+  useEffect(() => {
+    setVersiones([]);
+    fetch(
+      `${BASE_URL}/versiones?brand_id=${idMarcaElegida}&model_id=${idModeloElegido}&anio=${anioElegido}`,
+      {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        redirect: 'follow',
+      },
+    )
+      .then((response) => response.json())
+      .then((result) => {
+        setVersiones(result);
+      })
+      .catch((error) => console.log('error', error));
+  }, [anioElegido]);
+
+  const elegirMarca = (value, id) => {
     setMarcaElegida(value);
+    setIdMarcaElegida(id);
   };
 
-  const elegirModelo = (value) => {
+  const elegirModelo = (value, id) => {
     setModeloElegido(value);
+    setIdModeloElegido(id);
   };
 
   const elegirAnio = (value) => {
     setAnioElegido(value);
   };
 
-  const elegirVersion = (value) => {
+  const elegirVersion = (value, id) => {
     setVersionElegida(value);
+    setIdVersionElegida(id);
+  };
+
+  const handleGnc = (e) => {
+    setGncValue(e.target.value);
+  };
+
+  const setData = () => {
+    dispatch(setVehiculoAsegurar({
+      marcaElegida,
+      modeloElegido,
+      idModeloElegido,
+      anioElegido,
+      versionElegida,
+      idVersionElegida,
+      gnc,
+      gncValue,
+    }));
   };
 
   return (
@@ -39,7 +153,7 @@ const Paso2 = () => {
         <Redirect to="/" />
       ) : (
         <Container>
-          <ProgressBar percentaje="p20" />
+          <ProgressBar percentaje="p3" />
 
           <Title>
             ¿Qué
@@ -56,41 +170,66 @@ const Paso2 = () => {
             <Select
               type="Marca"
               name="marca"
-              options={marcas}
+              options={marcas || []}
               elegirOpcion={elegirMarca}
+              selectedValue={marcaElegida}
             />
 
             <Select
               state={!!marcaElegida}
               type="Modelo"
               name="modelo"
-              options={modelos}
+              options={modelos || []}
               elegirOpcion={elegirModelo}
+              selectedValue={modeloElegido}
             />
 
             <Select
               state={!!modeloElegido}
               type="Año"
               name="anio"
-              options={anios}
-              elegirOpcion={elegirAnio}
+              options={anios || []}
+              elegirOpcionAnio={elegirAnio}
+              selectedValue={anioElegido}
             />
 
             <Select
               state={!!anioElegido}
               type="Versión"
               name="version"
-              options={versiones}
+              options={versiones || []}
               elegirOpcion={elegirVersion}
+              selectedValue={versionElegida}
             />
+
+            <GncContainer>
+              <GncFirstColumn>
+                <p>GNC</p>
+                <GncOptionsContainer>
+                  <GncOptionsLabelNo className={gnc ? '' : 'active'} onClick={() => { setGnc(false); setGncValue(''); }}>
+                    No
+                    <input type="radio" value="No" name="gnc" />
+                  </GncOptionsLabelNo>
+                  <GncOptionsLabelSi className={gnc ? 'active' : ''} onClick={() => { setGnc(true); }}>
+                    Si
+                    <input type="radio" value="Si" name="gnc" />
+                  </GncOptionsLabelSi>
+                </GncOptionsContainer>
+              </GncFirstColumn>
+              {gnc && (
+              <GncSecondColumn>
+                <input type="number" placeholder="10000" name="gnc_value" value={gncValue} onChange={handleGnc} />
+              </GncSecondColumn>
+              )}
+            </GncContainer>
 
             <Btns>
               <BtnBack>
                 <Link to="/2/">Volver</Link>
               </BtnBack>
 
-              <BtnContinue className={!versionElegida ? 'disabled' : ''}>
-                <Link to="/4/">Continuar</Link>
+              <BtnContinue className={!versionElegida ? 'disabled' : gnc ? gncValue ? '' : 'disabled' : ''}>
+                <Link onClick={setData} to="/4/">Continuar</Link>
               </BtnContinue>
             </Btns>
           </Form>
@@ -166,5 +305,88 @@ const BtnContinue = styled.div`
 
   &.disabled a {
     pointer-events: none;
+  }
+`;
+
+const GncContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+`;
+
+const GncFirstColumn = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 45%;
+  padding-left: 5px;
+  color: var(--gris);
+`;
+
+const GncSecondColumn = styled.div`
+  display: flex;
+  align-items: center;
+  width: 50%;
+  position: relative;
+
+  &::before {
+    content: '$';
+    text-align: left;
+    display: block;
+    position: absolute;
+    left: 8px;
+    color: var(--gris);
+  }
+
+  & input {
+    padding: 5px;
+    font-size: 16px;
+    color: var(--gris);
+    border: 2px solid var(--verde);
+    text-align: right;
+  }
+`;
+
+const GncOptionsContainer = styled.div`
+  display: flex;
+  align-items: center;
+  width: 70%;
+  border: 2px solid var(--verde);
+`;
+
+const GncOptionsLabelNo = styled.label`
+  display: block;
+  width: 50%;
+  text-align: center;
+  padding: 5px 0;
+  text-transform: uppercase;
+  color: var(--azul);
+
+  &.active {
+    color: #fff;
+    background: var(--verde);
+  }
+
+  & input {
+    display: none;
+  }
+`;
+
+const GncOptionsLabelSi = styled.label`
+  display: block;
+  width: 50%;
+  text-align: center;
+  padding: 5px 0;
+  text-transform: uppercase;
+  color: var(--azul);
+
+  &.active {
+    color: #fff;
+    background: var(--verde);
+  }
+
+  & input {
+    display: none;
   }
 `;

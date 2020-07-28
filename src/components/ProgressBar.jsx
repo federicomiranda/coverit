@@ -19,11 +19,23 @@ const Bar = styled.div`
     top: 0;
     transition: width 0.5s;
   }
-  &.p10::after {
-    width: 10%;
+  &.p1::after {
+    width: 16.66%;
   }
-  &.p20::after {
-    width: 20%;
+  &.p2::after {
+    width: 33.32%;
+  }
+  &.p3::after {
+    width: 49.98%;
+  }
+  &.p4::after {
+    width: 66.64%;
+  }
+  &.p5::after {
+    width: 83.3%;
+  }
+  &.p6::after {
+    width: 100%;
   }
 `;
 

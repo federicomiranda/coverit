@@ -1,17 +1,35 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSortDown } from '@fortawesome/free-solid-svg-icons';
 
 const Select = ({
-  type, name, options, elegirOpcion, state = true,
+  type,
+  name,
+  options,
+  elegirOpcion,
+  elegirOpcionAnio,
+  state = true,
+  selectedValue,
 }) => {
   const [modal, openModal] = useState(false);
   const [value, setValue] = useState('');
 
-  const handleSelect = (option) => {
+  useEffect(() => {
+    if (options.length === 0) {
+      setValue('');
+    }
+  }, [options]);
+
+  const handleSelect = (option, id) => {
     openModal(false);
-    elegirOpcion(option);
+    elegirOpcion(option, id);
+    setValue(option);
+  };
+
+  const handleSelectAnio = (option) => {
+    openModal(false);
+    elegirOpcionAnio(option);
     setValue(option);
   };
 
@@ -25,7 +43,7 @@ const Select = ({
             openModal(true);
           }}
         >
-          {value || type}
+          {selectedValue || value || type}
           {' '}
           <SelectIconContainer>
             <FontAwesomeIcon icon={faSortDown} />
@@ -33,12 +51,29 @@ const Select = ({
         </LabelSelect>
       </FieldSeparator>
 
-      {modal && (
+      {type !== 'Año' && modal && options && (
         <ModalSelect>
           {options.map((option) => (
-            <ItemModalSelect onClick={() => handleSelect(option)} key={option}>
-              {option}
-              <InputModalSelect type="radio" name={name} value={option} />
+            <ItemModalSelect
+              onClick={() => handleSelect(option.name, option.id)}
+              key={option.id}
+            >
+              {option.name}
+              <InputModalSelect type="radio" name={name} value={option.id} />
+            </ItemModalSelect>
+          ))}
+        </ModalSelect>
+      )}
+
+      {type === 'Año' && modal && options && (
+        <ModalSelect>
+          {options.map((option) => (
+            <ItemModalSelect
+              onClick={() => handleSelectAnio(option.anio)}
+              key={option.anio}
+            >
+              {option.anio}
+              <InputModalSelect type="radio" name={name} value={option.anio} />
             </ItemModalSelect>
           ))}
         </ModalSelect>

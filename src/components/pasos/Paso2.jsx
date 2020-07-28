@@ -1,27 +1,60 @@
-import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { Redirect, Link } from 'react-router-dom';
 import styled from 'styled-components';
 import ProgressBar from '../ProgressBar';
 import Select from '../Select';
-
-const localidades = [
-  'Localidad 1',
-  'Localidad 2',
-  'Localidad 3',
-];
+import {
+  setCP, setLoc, removeCP, removeLoc,
+} from '../../actions';
 
 const Paso2 = () => {
-  const vehiculo = useSelector((state) => state.vehiculo);
-  const [cp, setCp] = useState('');
-  const [locElegida, setLocElegida] = useState('');
+  const dispatch = useDispatch();
 
-  const elegirLocalidad = (value) => {
+  const vehiculo = useSelector((state) => state.vehiculo);
+  const reduxCP = useSelector((state) => state.cp);
+  const reduxLoc = useSelector((state) => state.loc);
+  const token = useSelector((state) => state.token);
+  const [cp, setCp] = useState(reduxCP || '');
+  const [locElegida, setLocElegida] = useState(reduxLoc || '');
+  const [localidades, setLocalidades] = useState([]);
+
+  const BASE_URL = process.env.REACT_APP_API_URL;
+
+  useEffect(() => {
+    setLocalidades([]);
+    if (cp.length >= 3) {
+      fetch(`${BASE_URL}/localidades?codigo_postal=${cp}`, {
+        method: 'POST',
+        headers: {
+          Authorization:
+          `Bearer ${token}`,
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        redirect: 'follow',
+      })
+        .then((response) => response.json())
+        .then((result) => {
+          setLocalidades(result);
+        })
+        .catch((error) => console.log('error', error));
+    }
+  }, [cp]);
+
+  const saveData = () => {
+    dispatch(setCP(cp));
+    dispatch(setLoc(locElegida));
+  };
+
+  const elegirLocalidad = (value, id) => {
     setLocElegida(value);
   };
 
   const handleChangeCP = (e) => {
     setCp(e.target.value);
+    setLocElegida('');
+    dispatch(removeCP());
+    dispatch(removeLoc());
   };
 
   return (
@@ -30,7 +63,7 @@ const Paso2 = () => {
         <Redirect to="/" />
       ) : (
         <Container>
-          <ProgressBar percentaje="p20" />
+          <ProgressBar percentaje="p2" />
 
           <Title>
             ¿Dónde usas
@@ -49,6 +82,7 @@ const Paso2 = () => {
                 id="cp"
                 placeholder="Código Postal"
                 onChange={handleChangeCP}
+                value={cp}
               />
               <LabelCP htmlFor="cp">
                 Si no conoces tu código postal, buscalo
@@ -61,8 +95,9 @@ const Paso2 = () => {
               state={!(!cp || cp.length < 3)}
               type="Localidades"
               name="localidades"
-              options={localidades}
+              options={localidades || []}
               elegirOpcion={elegirLocalidad}
+              selectedValue={locElegida}
             />
 
             <Disclaimer>
@@ -76,7 +111,7 @@ const Paso2 = () => {
 
               <BtnContinue className={!locElegida ? 'disabled' : ''}>
                 {/* <BtnContinue> */}
-                <Link to="/3/">Continuar</Link>
+                <Link onClick={saveData} to="/3/">Continuar</Link>
               </BtnContinue>
             </Btns>
           </Form>
