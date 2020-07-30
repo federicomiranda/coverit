@@ -55,6 +55,7 @@ const Paso6 = () => {
               <SumaAseguradaContainer>
                 <SumaAseguradaValue>
                   $
+                  {' '}
                   {new Intl.NumberFormat('de-DE').format(sumaAsegurada)}
                 </SumaAseguradaValue>
                 <SumaAseguradaText>Suma asegurada</SumaAseguradaText>
