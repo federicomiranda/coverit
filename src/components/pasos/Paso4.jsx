@@ -1,23 +1,26 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Redirect, Link } from 'react-router-dom';
 import styled from 'styled-components';
 import ProgressBar from '../ProgressBar';
-import {
-  setClientData,
-} from '../../actions';
+import { setClientData, setSA } from '../../actions';
 
 const Paso4 = () => {
   const dispatch = useDispatch();
+  const token = useSelector((state) => state.token);
 
   const vehiculo = useSelector((state) => state.vehiculo);
   const cliente = useSelector((state) => state.cliente);
+  const asegurar = useSelector((state) => state.asegurar);
+
+  const BASE_URL = process.env.REACT_APP_API_URL;
 
   const [nombre, setNombre] = useState(cliente.nombre || '');
   const [apellido, setApellido] = useState(cliente.apellido || '');
   const [edad, setEdad] = useState(cliente.edad || '');
   const [email, setEmail] = useState(cliente.email || '');
   const [tel, setTel] = useState(cliente.tel || '');
+  const [sumaAsegurada, setSumaAsegurada] = useState(0);
 
   const handleChangeNombre = (e) => {
     setNombre(e.target.value);
@@ -40,6 +43,24 @@ const Paso4 = () => {
   };
 
   const saveData = () => {
+    fetch(
+      `${BASE_URL}/suma-asegurada?version_id=${asegurar.idVersionElegida}&anio=${asegurar.anioElegido}`,
+      {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        redirect: 'follow',
+      },
+    )
+      .then((response) => response.json())
+      .then((result) => {
+        setSumaAsegurada(result.suma_asegurada);
+        dispatch(setSA(result.suma_asegurada));
+      })
+      .catch((error) => console.log('error', error));
+
     dispatch(setClientData({
       nombre,
       apellido,

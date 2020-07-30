@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Redirect, Link, useHistory } from 'react-router-dom';
+import { Redirect, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import ProgressBar from '../ProgressBar';
 import {
-  setSA,
+  setSolicitud,
+  setCoberturas,
 } from '../../actions';
 
 import SwissMedical from '../../assets/sm_seguros.png';
@@ -19,14 +20,32 @@ const Paso5 = () => {
   const cliente = useSelector((state) => state.cliente);
   const asegurar = useSelector((state) => state.asegurar);
   const cp = useSelector((state) => state.cp);
-
-  const [sumaAsegurada, setSumaAsegurada] = useState(0);
+  const localidad = useSelector((state) => state.loc);
+  const sumaAsegurada = useSelector((state) => state.sumaAsegurada);
 
   const BASE_URL = process.env.REACT_APP_API_URL;
 
   useEffect(() => {
+    fetch(`${BASE_URL}/coberturas`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      redirect: 'follow',
+    })
+      .then((response) => response.json())
+      .then((rta) => {
+        const coberturas = [];
+        rta.map((cobertura) => {
+          coberturas.push(cobertura.nombre);
+        });
+        dispatch(setCoberturas(coberturas));
+      })
+      .catch((error) => console.log('error', error));
+
     fetch(
-      `${BASE_URL}/suma-asegurada?version_id=${asegurar.idVersionElegida}&anio=${asegurar.anioElegido}`,
+      `${BASE_URL}/cotizar?nombre=${cliente.nombre}&apellido=${cliente.apellido}&edad=${cliente.edad}&email=${cliente.email}&celular=${cliente.tel}&localidad_id=${localidad.idLocElegida}&version_id=${asegurar.idVersionElegida}&anio=${asegurar.anioElegido}&tipo=vehiculo&tipo_uso=particular`,
       {
         method: 'POST',
         headers: {
@@ -38,17 +57,11 @@ const Paso5 = () => {
     )
       .then((response) => response.json())
       .then((result) => {
-        setSumaAsegurada(result.suma_asegurada);
-        dispatch(setSA(result.suma_asegurada));
+        dispatch(setSolicitud(result));
+        history.push('/6/');
       })
       .catch((error) => console.log('error', error));
   }, []);
-
-  const handleChange = () => {
-    setTimeout(() => {
-      history.push('/6/');
-    }, 2000);
-  };
 
   return (
     <>
@@ -56,26 +69,26 @@ const Paso5 = () => {
         <Redirect to="/" />
       ) : (
         <Container>
-          <ProgressBar percentaje="p5" value="5 de 6" />
-
-          <Title>
-            <TitleMod>{cliente.nombre}</TitleMod>
-            {', '}
-            estamos buscando las mejores coberturas para tu auto.
-          </Title>
-
-          <DataList>
-            <DataListItem>{asegurar.marcaElegida}</DataListItem>
-            <DataListItem>{asegurar.modeloElegido}</DataListItem>
-            <DataListItem>{asegurar.anioElegido}</DataListItem>
-            <DataListItem>
-              CP
-              {cp}
-            </DataListItem>
-          </DataList>
-
           {sumaAsegurada !== 0 && (
             <>
+              <ProgressBar percentaje="p5" value="5 de 6" />
+
+              <Title>
+                <TitleMod>{cliente.nombre}</TitleMod>
+                {', '}
+                estamos buscando las mejores coberturas para tu auto.
+              </Title>
+
+              <DataList>
+                <DataListItem>{asegurar.marcaElegida}</DataListItem>
+                <DataListItem>{asegurar.modeloElegido}</DataListItem>
+                <DataListItem>{asegurar.anioElegido}</DataListItem>
+                <DataListItem>
+                  CP
+                  {cp}
+                </DataListItem>
+              </DataList>
+
               <SumaAseguradaContainer>
                 <SumaAseguradaValue>
                   $
@@ -85,10 +98,15 @@ const Paso5 = () => {
               </SumaAseguradaContainer>
 
               <EstamosCotizandoContainer>
-                <EstamosCotizandoText>Estamos cotizando en...</EstamosCotizandoText>
-                <EstamosCotizandoImg src={SwissMedical} alt="Swiss Medical Seguros" />
+                <EstamosCotizandoText>
+                  Estamos cotizando en...
+                </EstamosCotizandoText>
+                <EstamosCotizandoImg
+                  src={SwissMedical}
+                  alt="Swiss Medical Seguros"
+                />
               </EstamosCotizandoContainer>
-              {handleChange()}
+              {/* {handleChange()} */}
             </>
           )}
         </Container>

@@ -6,6 +6,8 @@ import locReducer from './locReducer';
 import vehiculoAsegurar from './vehiculoAsegurar';
 import clienteData from './clienteData';
 import sumaAsegurada from './sumaAsegurada';
+import solicitud from './solicitud';
+import coberturas from './coberturas';
 
 const allReducers = combineReducers({
   token: tokenReducer,
@@ -15,6 +17,8 @@ const allReducers = combineReducers({
   asegurar: vehiculoAsegurar,
   cliente: clienteData,
   sumaAsegurada,
+  solicitud,
+  coberturas,
 });
 
 export default allReducers;

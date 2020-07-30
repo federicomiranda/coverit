@@ -43,3 +43,13 @@ export const setSA = (data) => ({
   type: 'SET_SUMA_ASEGURADA',
   payload: data,
 });
+
+export const setSolicitud = (data) => ({
+  type: 'SET_SOLICITUD',
+  payload: data,
+});
+
+export const setCoberturas = (data) => ({
+  type: 'SET_COBERTURAS',
+  payload: data,
+});
