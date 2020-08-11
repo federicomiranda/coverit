@@ -53,6 +53,13 @@ const Paso2 = () => {
   }, []);
 
   useEffect(() => {
+    if (marcas.length === 1) {
+      setMarcaElegida(marcas[0].name);
+      setIdMarcaElegida(marcas[0].id);
+    }
+  }, [marcas]);
+
+  useEffect(() => {
     setModelos([]);
     setAnios([]);
     setVersiones([]);
@@ -71,6 +78,13 @@ const Paso2 = () => {
       })
       .catch((error) => console.log('error', error));
   }, [idMarcaElegida]);
+
+  useEffect(() => {
+    if (modelos.length === 1) {
+      setModeloElegido(modelos[0].name);
+      setIdModeloElegido(modelos[0].id);
+    }
+  }, [modelos]);
 
   useEffect(() => {
     setAnios([]);
@@ -111,6 +125,13 @@ const Paso2 = () => {
       .catch((error) => console.log('error', error));
   }, [anioElegido]);
 
+  useEffect(() => {
+    if (versiones.length === 1) {
+      setVersionElegida(versiones[0].name);
+      setIdVersionElegida(versiones[0].id);
+    }
+  }, [versiones]);
+
   const elegirMarca = (value, id) => {
     setMarcaElegida(value);
     setIdMarcaElegida(id);
@@ -147,6 +168,10 @@ const Paso2 = () => {
     }));
   };
 
+  const stopSubmit = (e) => {
+    e.preventDefault();
+  };
+
   return (
     <>
       {!vehiculo ? (
@@ -166,7 +191,7 @@ const Paso2 = () => {
             ?
           </Title>
 
-          <Form action="#">
+          <Form onSubmit={stopSubmit}>
             <Select
               type="Marca"
               name="marca"
@@ -206,20 +231,37 @@ const Paso2 = () => {
               <GncFirstColumn>
                 <p>GNC</p>
                 <GncOptionsContainer>
-                  <GncOptionsLabelNo className={gnc ? '' : 'active'} onClick={() => { setGnc(false); setGncValue(''); }}>
+                  <GncOptionsLabelNo
+                    className={gnc ? '' : 'active'}
+                    onClick={() => {
+                      setGnc(false);
+                      setGncValue('');
+                    }}
+                  >
                     No
                     <input type="radio" value="No" name="gnc" />
                   </GncOptionsLabelNo>
-                  <GncOptionsLabelSi className={gnc ? 'active' : ''} onClick={() => { setGnc(true); }}>
+                  <GncOptionsLabelSi
+                    className={gnc ? 'active' : ''}
+                    onClick={() => {
+                      setGnc(true);
+                    }}
+                  >
                     Si
                     <input type="radio" value="Si" name="gnc" />
                   </GncOptionsLabelSi>
                 </GncOptionsContainer>
               </GncFirstColumn>
               {gnc && (
-              <GncSecondColumn>
-                <input type="number" placeholder="10000" name="gnc_value" value={gncValue} onChange={handleGnc} />
-              </GncSecondColumn>
+                <GncSecondColumn>
+                  <input
+                    type="number"
+                    placeholder="10000"
+                    name="gnc_value"
+                    value={gncValue}
+                    onChange={handleGnc}
+                  />
+                </GncSecondColumn>
               )}
             </GncContainer>
 
@@ -228,8 +270,20 @@ const Paso2 = () => {
                 <Link to="/2/">Volver</Link>
               </BtnBack>
 
-              <BtnContinue className={!versionElegida ? 'disabled' : gnc ? gncValue ? '' : 'disabled' : ''}>
-                <Link onClick={setData} to="/4/">Continuar</Link>
+              <BtnContinue
+                className={
+                  !versionElegida
+                    ? 'disabled'
+                    : gnc
+                      ? gncValue
+                        ? ''
+                        : 'disabled'
+                      : ''
+                }
+              >
+                <Link onClick={setData} to="/4/">
+                  Continuar
+                </Link>
               </BtnContinue>
             </Btns>
           </Form>

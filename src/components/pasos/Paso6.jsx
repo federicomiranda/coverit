@@ -1,16 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Redirect, Link } from 'react-router-dom';
+import { Redirect, Link, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import { Carousel } from 'react-responsive-carousel';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
+import parse from 'html-react-parser';
 import ProgressBar from '../ProgressBar';
-import { setSA } from '../../actions';
+import SolicitarAsistencia from '../SolicitarAsistencia';
+import { setCoberturaSeleccionada } from '../../actions';
 
 import SwissMedical from '../../assets/sm_seguros.png';
 
 const Paso6 = () => {
   const dispatch = useDispatch();
+  const history = useHistory();
 
   const vehiculo = useSelector((state) => state.vehiculo);
   const cliente = useSelector((state) => state.cliente);
@@ -21,10 +26,69 @@ const Paso6 = () => {
   const coberturas = useSelector((state) => state.coberturas);
 
   const [cots, setCots] = useState([]);
+  const [detalle, setDetalle] = useState(false);
+  const [asistencia, setAsistencia] = useState(false);
+  const [coberturaElegida, setCoberturaElegida] = useState(null);
+  const [
+    coberturaElegidaDescripcion,
+    setCoberturaElegidaDescripcion,
+  ] = useState(null);
 
   useEffect(() => {
     setCots(solicitud.solicitud.cotizaciones);
   }, []);
+
+  const handleDetalle = (value) => {
+    setDetalle(!detalle);
+    if (!coberturaElegida) {
+      setCoberturaElegida(value.nombre);
+      setCoberturaElegidaDescripcion(value.descripcion);
+    } else {
+      setCoberturaElegida(null);
+      setCoberturaElegidaDescripcion(null);
+    }
+  };
+
+  const handleAsistencia = (value) => {
+    setAsistencia(value);
+  };
+
+  const handleContratacion = () => {
+    const slides = document.querySelectorAll('#cotizaciones_container li.slide');
+
+    let indice = 0;
+    const arr_coberturas = [];
+
+    slides.forEach((element, index) => {
+      if (element.classList.contains('selected')) {
+        if (index === 1 || index === 11) {
+          indice = 0;
+        } else if (index === 0 || index === 10) {
+          indice = 9;
+        } else {
+          indice = index - 1;
+        }
+
+        cots.map((cotizacion) => {
+          for (let i = 0; i < coberturas.length; i++) {
+            if (i == cotizacion.categoria_cobertura) {
+              arr_coberturas.push({
+                nombre: coberturas[i].nombre,
+                descripcion: coberturas[i].descripcion,
+              });
+            }
+          }
+        });
+
+        arr_coberturas.forEach((element, index) => {
+          if (index === indice) {
+            dispatch(setCoberturaSeleccionada(element));
+            history.push('/7/');
+          }
+        });
+      }
+    });
+  };
 
   return (
     <>
@@ -36,94 +100,142 @@ const Paso6 = () => {
             <>
               <ProgressBar percentaje="p6" value="6 de 6" />
 
-              <Title>
-                <TitleMod>{cliente.nombre}</TitleMod>
-                {', '}
-                estas son las mejores propuestas para tu cobertura.
-              </Title>
+              {!detalle ? (
+                <>
+                  <Title>
+                    <TitleMod>{cliente.nombre}</TitleMod>
+                    {', '}
+                    estas son las mejores propuestas para tu cobertura.
+                  </Title>
 
-              <DataList>
-                <DataListItem>{asegurar.marcaElegida}</DataListItem>
-                <DataListItem>{asegurar.modeloElegido}</DataListItem>
-                <DataListItem>{asegurar.anioElegido}</DataListItem>
-                <DataListItem>
-                  CP
-                  {cp}
-                </DataListItem>
-              </DataList>
+                  <DataList>
+                    <DataListItem>{asegurar.marcaElegida}</DataListItem>
+                    <DataListItem>{asegurar.modeloElegido}</DataListItem>
+                    <DataListItem>{asegurar.anioElegido}</DataListItem>
+                    <DataListItem>
+                      CP
+                      {cp}
+                    </DataListItem>
+                  </DataList>
 
-              <SumaAseguradaContainer>
-                <SumaAseguradaValue>
-                  $
-                  {' '}
-                  {new Intl.NumberFormat('de-DE').format(sumaAsegurada)}
-                </SumaAseguradaValue>
-                <SumaAseguradaText>Suma asegurada</SumaAseguradaText>
-                <SumaAseguradaImg
-                  src={SwissMedical}
-                  alt="Swiss Medical Seguros"
-                />
-              </SumaAseguradaContainer>
+                  <SumaAseguradaContainer>
+                    <SumaAseguradaValue>
+                      $
+                      {' '}
+                      {new Intl.NumberFormat('de-DE').format(sumaAsegurada)}
+                    </SumaAseguradaValue>
+                    <SumaAseguradaText>Suma asegurada</SumaAseguradaText>
+                    <SumaAseguradaImg
+                      src={SwissMedical}
+                      alt="Swiss Medical Seguros"
+                    />
+                  </SumaAseguradaContainer>
 
-              <CotizacionesContainer>
-                <Carousel
-                  autoPlay={false}
-                  showThumbs={false}
-                  showStatus={false}
-                  dynamicHeight={false}
-                  showArrows={cots.length > 1}
-                  showIndicators={cots.length > 1}
-                  infiniteLoop
-                >
-                  {cots.map((cotizacion) => {
-                    let cobertura;
+                  <CotizacionesContainer id="cotizaciones_container">
+                    <Carousel
+                      autoPlay={false}
+                      showThumbs={false}
+                      showStatus={false}
+                      dynamicHeight={false}
+                      showArrows={cots.length > 1}
+                      showIndicators={cots.length > 1}
+                      infiniteLoop
+                    >
+                      {cots.map((cotizacion) => {
+                        let cobertura = null;
 
-                    switch (cotizacion.categoria_cobertura) {
-                      case '1':
-                        cobertura = coberturas[0];
-                        break;
-                      case '2':
-                        cobertura = coberturas[1];
-                        break;
-                      case '3':
-                        cobertura = coberturas[2];
-                        break;
-                      case '4':
-                        cobertura = coberturas[3];
-                        break;
-                      default:
-                        cobertura = null;
-                    }
+                        for (let i = 0; i < coberturas.length; i++) {
+                          if (i == cotizacion.categoria_cobertura) {
+                            cobertura = {
+                              nombre: coberturas[i].nombre,
+                              descripcion: coberturas[i].descripcion,
+                            };
+                          }
+                        }
 
-                    return (
-                      <CotizacionesItem key={cotizacion.id} id={cotizacion.id}>
-                        <CotizacionesItemCobertura>
-                          {cobertura}
-                        </CotizacionesItemCobertura>
-                        <CotizacionesItemCuota>
-                          $
-                          {' '}
-                          <span>{cotizacion.cuota}</span>
-                        </CotizacionesItemCuota>
-                        <CotizacionesItemAclaracionCuota>
-                          Valor cuota
-                          {' '}
-                          <span>(Mensual)</span>
-                        </CotizacionesItemAclaracionCuota>
-                        <CotizacionesItemDescuentoContainer>
-                          <CotizacionesItemDescuentoTachado>
-                            $
-                            {(cotizacion.cuota * 1.35).toFixed(2)}
-                          </CotizacionesItemDescuentoTachado>
-                          <CotizacionesItemDescuentoOff>
-                            35% OFF
-                          </CotizacionesItemDescuentoOff>
-                        </CotizacionesItemDescuentoContainer>
-                      </CotizacionesItem>
-                    );
-                  })}
-                </Carousel>
-              </CotizacionesContainer>
+                        return (
+                          <CotizacionesItem
+                            key={cotizacion.id}
+                            id={cotizacion.id}
+                          >
+                            <CotizacionesItemCobertura>
+                              {cobertura.nombre}
+                            </CotizacionesItemCobertura>
+                            <CotizacionesItemVerDetalle
+                              onClick={() => handleDetalle(cobertura)}
+                            >
+                              ver detalle
+                            </CotizacionesItemVerDetalle>
+                            <CotizacionesItemCuota>
+                              $
+                              {' '}
+                              <span>{cotizacion.cuota}</span>
+                            </CotizacionesItemCuota>
+                            <CotizacionesItemAclaracionCuota>
+                              Valor cuota
+                              {' '}
+                              <span>(Mensual)</span>
+                            </CotizacionesItemAclaracionCuota>
+                            <CotizacionesItemDescuentoContainer>
+                              <CotizacionesItemDescuentoTachado>
+                                $
+                                {(cotizacion.cuota * 1.35).toFixed(2)}
+                              </CotizacionesItemDescuentoTachado>
+                              <CotizacionesItemDescuentoOff>
+                                35% OFF
+                              </CotizacionesItemDescuentoOff>
+                            </CotizacionesItemDescuentoContainer>
+                          </CotizacionesItem>
+                        );
+                      })}
+                    </Carousel>
+                    <BtnContinue onClick={handleContratacion}>
+                      Ir a contratación online
+                    </BtnContinue>
+                    <BtnAsistencia onClick={() => handleAsistencia(true)}>
+                      Solicitar asistencia
+                    </BtnAsistencia>
+                  </CotizacionesContainer>
+
+                  {asistencia && (
+                    <SolicitarAsistencia handleAsistencia={handleAsistencia} />
+                  )}
+                </>
+              ) : (
+                <DetalleContainer>
+                  <DetalleHeader>
+                    <DetalleVolver>
+                      <FontAwesomeIcon
+                        icon={faChevronLeft}
+                        onClick={() => handleDetalle(null)}
+                      />
+                    </DetalleVolver>
+                    <DetalleImg
+                      src={SwissMedical}
+                      alt="Swiss Medical Seguros"
+                    />
+                  </DetalleHeader>
+                  <DetalleCobertura>
+                    <CoberturaElegida>{coberturaElegida}</CoberturaElegida>
+                    <div>
+                      <DetalleSumaAsegurada>
+                        $
+                        {' '}
+                        {new Intl.NumberFormat('de-DE').format(sumaAsegurada)}
+                      </DetalleSumaAsegurada>
+                      <DetalleSumaAseguradaText>
+                        Suma asegurada
+                      </DetalleSumaAseguradaText>
+                    </div>
+                  </DetalleCobertura>
+                  <DetalleDescripcion>
+                    {parse(coberturaElegidaDescripcion)}
+                  </DetalleDescripcion>
+                  <BtnContinue>
+                    <Link to="/7/">Ir a contratación online</Link>
+                  </BtnContinue>
+                </DetalleContainer>
+              )}
             </>
           )}
         </Container>
@@ -207,7 +319,7 @@ const CotizacionesContainer = styled.div`
     background: none;
     box-shadow: none;
     width: 10px;
-    height: 10px
+    height: 10px;
   }
 
   & .control-dots .dot.selected {
@@ -242,7 +354,13 @@ const CotizacionesItemCobertura = styled.p`
   color: var(--azul);
   font-size: 16px;
   font-weight: 300;
-  margin-bottom: 12px;
+`;
+
+const CotizacionesItemVerDetalle = styled.p`
+  color: var(--gris);
+  font-size: 12px;
+  font-weight: 300;
+  margin: 5px 0;
 `;
 
 const CotizacionesItemCuota = styled.p`
@@ -287,4 +405,117 @@ const CotizacionesItemDescuentoOff = styled.p`
   font-size: 14px;
   border-radius: 10px;
   font-weight: 400;
+`;
+
+const BtnContinue = styled.div`
+  background: var(--verde);
+  border: none;
+  padding: 10px 20px;
+  text-align: center;
+  margin-top: 12px;
+  border: 2px solid var(--verde);
+  color: #fff;
+  font-size: 16px;
+  text-transform: uppercase;
+`;
+
+const BtnAsistencia = styled.button`
+  color: var(--verde);
+  border: none;
+  border: 2px solid var(--verde);
+  padding: 10px 20px;
+  text-align: center;
+  margin-top: 10px;
+  background: #fff;
+  font-size: 16px;
+  text-transform: uppercase;
+  width: 100%;
+`;
+
+const DetalleContainer = styled.div`
+  display: block;
+  width: 100%;
+  border: 1px solid var(--verde);
+  border-radius: 30px;
+  position: relative;
+  margin-top: 24px;
+  padding: 24px;
+`;
+
+const DetalleHeader = styled.div`
+  display: flex;
+  justify-content: center;
+`;
+
+const DetalleVolver = styled.div`
+  position: absolute;
+  left: 15px;
+  top: 15px;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--verde);
+  border: 2px solid var(--verde);
+  border-radius: 50%;
+
+  & svg {
+    color: #fff;
+  }
+`;
+
+const DetalleImg = styled.img`
+  width: 100px;
+`;
+
+const DetalleCobertura = styled.div`
+  margin: 32px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`;
+
+const CoberturaElegida = styled.p`
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--azul);
+  text-transform: uppercase;
+`;
+
+const DetalleSumaAsegurada = styled.p`
+  color: var(--azul);
+  text-align: center;
+  font-weight: 300;
+  font-size: 20px;
+`;
+
+const DetalleSumaAseguradaText = styled.p`
+  color: var(--azul);
+  font-weight: 500;
+  text-transform: uppercase;
+  font-size: 11px;
+  text-align: center;
+`;
+
+const DetalleDescripcion = styled.p`
+  font-size: 14px;
+  color: var(--azul);
+  height: 200px;
+  overflow-y: auto;
+
+  &::-webkit-scrollbar {
+    width: 5px;
+    border-radius: 5px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--azul);
+    border-radius: 20px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #e1efef;
+    border-radius: 20px;
+  }
 `;

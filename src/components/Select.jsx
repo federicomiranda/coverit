@@ -18,6 +18,8 @@ const Select = ({
   useEffect(() => {
     if (options.length === 0) {
       setValue('');
+    } else if (options.length > 1) {
+      openModal(true);
     }
   }, [options]);
 
@@ -51,7 +53,7 @@ const Select = ({
         </LabelSelect>
       </FieldSeparator>
 
-      {type !== 'Año' && modal && options && (
+      {type !== 'Año' && modal && options.length > 1 && (
         <ModalSelect>
           {options.map((option) => (
             <ItemModalSelect

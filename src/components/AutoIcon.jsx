@@ -3,15 +3,16 @@ import styled from 'styled-components';
 
 const Svg = styled.svg`
   width: 70%;
-  fill: var(--azul);
+  fill: ${(props) => (props.color == 'azul' ? '#213c83' : '#fff')};
   transition: fill 0.3s ease-in-out;
   /* &:hover {
     fill: var(--verde);
   } */
 `;
 
-const AutoIcon = () => (
+const AutoIcon = ({ color }) => (
   <Svg
+    color={color}
     id="prefix__Capa_1"
     data-name="Capa 1"
     viewBox="0 0 145.07 69.06"

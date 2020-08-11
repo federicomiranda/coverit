@@ -70,6 +70,10 @@ const Paso4 = () => {
     }));
   };
 
+  const stopSubmit = (e) => {
+    e.preventDefault();
+  };
+
   return (
     <>
       {!vehiculo ? (
@@ -84,7 +88,7 @@ const Paso4 = () => {
             tus datos
           </Title>
 
-          <Form action="#">
+          <Form onSubmit={stopSubmit}>
             <FieldSeparator>
               <Input
                 type="text"
@@ -115,6 +119,8 @@ const Paso4 = () => {
                 placeholder="Edad"
                 onChange={handleChangeEdad}
                 value={edad}
+                max="99"
+                min="18"
               />
             </FieldSeparator>
 
@@ -146,8 +152,14 @@ const Paso4 = () => {
                 <Link to="/3/">Volver</Link>
               </BtnBack>
 
-              <BtnContinue className={nombre && apellido && edad && email && tel ? '' : 'disabled'}>
-                <Link onClick={saveData} to="/5/">Continuar</Link>
+              <BtnContinue
+                className={
+                  nombre && apellido && edad && email && tel ? '' : 'disabled'
+                }
+              >
+                <Link onClick={saveData} to="/5/">
+                  Continuar
+                </Link>
               </BtnContinue>
             </Btns>
           </Form>

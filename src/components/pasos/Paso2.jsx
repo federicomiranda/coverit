@@ -24,7 +24,7 @@ const Paso2 = () => {
 
   useEffect(() => {
     setLocalidades([]);
-    if (cp.length >= 3) {
+    if (cp.length === 4) {
       fetch(`${BASE_URL}/localidades?codigo_postal=${cp}`, {
         method: 'POST',
         headers: {
@@ -42,6 +42,13 @@ const Paso2 = () => {
     }
   }, [cp]);
 
+  useEffect(() => {
+    if (localidades.length === 1) {
+      setLocElegida(localidades[0].name);
+      setIdLocElegida(localidades[0].id);
+    }
+  }, [localidades]);
+
   const saveData = () => {
     dispatch(setCP(cp));
     dispatch(setLoc({ idLocElegida, locElegida }));
@@ -57,6 +64,10 @@ const Paso2 = () => {
     setLocElegida('');
     dispatch(removeCP());
     dispatch(removeLoc());
+  };
+
+  const stopSubmit = (e) => {
+    e.preventDefault();
   };
 
   return (
@@ -76,7 +87,7 @@ const Paso2 = () => {
             ?
           </Title>
 
-          <Form action="#">
+          <Form onSubmit={stopSubmit}>
             <FieldSeparator>
               <InputCP
                 type="text"
@@ -85,6 +96,8 @@ const Paso2 = () => {
                 placeholder="Código Postal"
                 onChange={handleChangeCP}
                 value={cp}
+                minLength="4"
+                maxLength="4"
               />
               <LabelCP htmlFor="cp">
                 Si no conoces tu código postal, buscalo

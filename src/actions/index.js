@@ -53,3 +53,13 @@ export const setCoberturas = (data) => ({
   type: 'SET_COBERTURAS',
   payload: data,
 });
+
+export const setCoberturaSeleccionada = (data) => ({
+  type: 'SET_COBERTURA_SELECCIONADA',
+  payload: data,
+});
+
+export const setDataVehiculo = (data) => ({
+  type: 'SET_DATA_VEHICULO',
+  payload: data,
+});

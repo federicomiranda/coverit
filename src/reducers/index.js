@@ -8,6 +8,8 @@ import clienteData from './clienteData';
 import sumaAsegurada from './sumaAsegurada';
 import solicitud from './solicitud';
 import coberturas from './coberturas';
+import coberturaSeleccionada from './coberturaSeleccionada';
+import dataVehiculo from './dataVehiculo';
 
 const allReducers = combineReducers({
   token: tokenReducer,
@@ -19,6 +21,8 @@ const allReducers = combineReducers({
   sumaAsegurada,
   solicitud,
   coberturas,
+  coberturaSeleccionada,
+  dataVehiculo,
 });
 
 export default allReducers;

@@ -32,21 +32,13 @@ const Paso1 = () => {
 
         <OptionsList>
           <OptionsListItem>
-            <Link
-              className="link"
-              to="/2/"
-              onClick={() => handleClick('moto')}
-            >
-              <MotoIcon />
+            <Link className="link" to="/2/" onClick={() => handleClick('moto')}>
+              <MotoIcon color="azul" />
             </Link>
           </OptionsListItem>
           <OptionsListItem>
-            <Link
-              className="link"
-              to="/2/"
-              onClick={() => handleClick('auto')}
-            >
-              <AutoIcon />
+            <Link className="link" to="/2/" onClick={() => handleClick('auto')}>
+              <AutoIcon color="azul" />
             </Link>
           </OptionsListItem>
         </OptionsList>

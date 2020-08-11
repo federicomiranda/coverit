@@ -38,7 +38,7 @@ const Paso5 = () => {
       .then((rta) => {
         const coberturas = [];
         rta.map((cobertura) => {
-          coberturas.push(cobertura.nombre);
+          coberturas.push({ nombre: cobertura.nombre, descripcion: cobertura.descripcion });
         });
         dispatch(setCoberturas(coberturas));
       })

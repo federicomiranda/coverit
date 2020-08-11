@@ -11,6 +11,8 @@ import Paso3 from './components/pasos/Paso3';
 import Paso4 from './components/pasos/Paso4';
 import Paso5 from './components/pasos/Paso5';
 import Paso6 from './components/pasos/Paso6';
+import Paso7 from './components/pasos/Paso7';
+import Paso8 from './components/pasos/Paso8';
 import { setToken } from './actions';
 
 function App() {
@@ -63,6 +65,12 @@ function App() {
         </Switch>
         <Switch>
           <Route exact path="/6/" component={Paso6} />
+        </Switch>
+        <Switch>
+          <Route exact path="/7/" component={Paso7} />
+        </Switch>
+        <Switch>
+          <Route exact path="/8/" component={Paso8} />
         </Switch>
       </Router>
       <GlobalStyle />
