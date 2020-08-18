@@ -1,52 +1,65 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Redirect, Link, useHistory } from 'react-router-dom';
+import { Redirect, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
 import SolicitarAsistencia from '../SolicitarAsistencia';
 import ProgressBar from '../ProgressBar';
-import { setDataVehiculo } from '../../actions';
+import { addClientDirection } from '../../actions';
 
 const Paso10 = () => {
   const dispatch = useDispatch();
   const history = useHistory();
 
   const vehiculo = useSelector((state) => state.vehiculo);
-  const asegurar = useSelector((state) => state.asegurar);
+  const loc = useSelector((state) => state.loc);
+  const cp = useSelector((state) => state.cp);
 
   const [asistencia, setAsistencia] = useState(false);
-  const [patente, setPatente] = useState('');
-  const [chasis, setChasis] = useState('');
-  const [motor, setMotor] = useState('');
 
-  const handleChangePatente = (e) => {
-    setPatente(e.target.value);
-  };
-
-  const handleChangeChasis = (e) => {
-    setChasis(e.target.value);
-  };
-
-  const handleChangeMotor = (e) => {
-    setMotor(e.target.value);
-  };
+  const [calle, setCalle] = useState('');
+  const [nro, setNro] = useState('');
+  const [piso, setPiso] = useState('');
+  const [depto, setDepto] = useState('');
 
   const handleAsistencia = (value) => {
     setAsistencia(value);
   };
 
   const handleVolver = () => {
-    history.push('/7/');
+    history.push('/9/');
   };
 
   const stopSubmit = (e) => {
     e.preventDefault();
   };
 
+  const handleCalle = (e) => {
+    setCalle(e.target.value);
+  };
+
+  const handleNro = (e) => {
+    setNro(e.target.value);
+  };
+
+  const handlePiso = (e) => {
+    setPiso(e.target.value);
+  };
+
+  const handleDepto = (e) => {
+    setDepto(e.target.value);
+  };
+
   const handleContinue = () => {
-    dispatch(setDataVehiculo({ patente, chasis, motor }));
-    history.push('/9/');
+    dispatch(addClientDirection({
+      calle,
+      nro,
+      piso,
+      depto,
+    }));
+
+    history.push('/11/');
   };
 
   return (
@@ -57,7 +70,7 @@ const Paso10 = () => {
         <>
           <CointainerAzul>
             <>
-              <ProgressBar percentaje="p1" value="1 de 6" />
+              <ProgressBar percentaje="p3" value="3 de 6" />
 
               <Title>
                 Contratación
@@ -73,51 +86,43 @@ const Paso10 = () => {
                   />
                 </Volver>
 
-                <div>
-                  <Marca>
-                    {asegurar.marcaElegida}
-                    {' '}
-                    {asegurar.anioElegido}
-                  </Marca>
-                  <Modelo>
-                    {asegurar.modeloElegido}
-                    {' '}
-                    {asegurar.versionElegida}
-                  </Modelo>
-                </div>
+                <DataCliente>
+                  <Domicilio>Domicilio de uso:</Domicilio>
+                  <Localidad>{loc.locElegida}</Localidad>
+                  <CodigoPostal>
+                    (CP
+                    {cp}
+                    )
+                  </CodigoPostal>
+                </DataCliente>
               </Info>
 
               <Form onSubmit={stopSubmit}>
+                <p>Domicilio de contratación</p>
                 <FieldSeparator>
                   <Input
                     type="text"
-                    name="patente"
-                    id="patente"
-                    placeholder="Patente"
-                    onChange={handleChangePatente}
-                    value={patente}
+                    name="calle"
+                    placeholder="Calle"
+                    onChange={handleCalle}
                   />
-                </FieldSeparator>
-
-                <FieldSeparator>
                   <Input
-                    type="text"
-                    name="chasis"
-                    id="chasis"
-                    placeholder="Chasis"
-                    onChange={handleChangeChasis}
-                    value={chasis}
+                    type="number"
+                    name="nro"
+                    placeholder="Nro"
+                    onChange={handleNro}
                   />
-                </FieldSeparator>
-
-                <FieldSeparator>
                   <Input
                     type="text"
-                    name="motor"
-                    id="motor"
-                    placeholder="Motor"
-                    onChange={handleChangeMotor}
-                    value={motor}
+                    name="piso"
+                    placeholder="Piso"
+                    onChange={handlePiso}
+                  />
+                  <Input
+                    type="text"
+                    name="departamento"
+                    placeholder="Departamento"
+                    onChange={handleDepto}
                   />
                 </FieldSeparator>
               </Form>
@@ -177,21 +182,31 @@ const Info = styled.div`
   justify-content: space-between;
 `;
 
-const Marca = styled.p`
-  font-size: 20px;
-  color: #fff;
-  font-weight: 500;
-  margin-bottom: 5px;
+const DataCliente = styled.div`
+  width: 65%;
   text-align: right;
-  text-transform: justify;
+  color: #fff;
+  font-weight: 300;
+  font-size: 16px;
 `;
 
-const Modelo = styled.p`
-  font-size: 18px;
+const Domicilio = styled.p`
+  color: var(--verde);
+  font-size: 14px;
+`;
+
+const Localidad = styled.p`
+  font-weight: 500;
+  text-transform: uppercase;
   color: #fff;
+  font-size: 18px;
+`;
+
+const CodigoPostal = styled.p`
   font-weight: 400;
-  text-align: right;
-  text-transform: justify;
+  text-transform: uppercase;
+  color: #fff;
+  font-size: 18px;
 `;
 
 const Volver = styled.div`
@@ -213,10 +228,18 @@ const Form = styled.form`
   margin: 32px 0 0;
   display: flex;
   flex-direction: column;
+
+  & > p {
+    color: var(--verde);
+    font-size: 14px;
+    margin-bottom: 12px;
+  }
 `;
 
 const FieldSeparator = styled.div`
   margin-bottom: 24px;
+  display: flex;
+  flex-wrap: wrap;
 `;
 
 const Input = styled.input`
@@ -229,6 +252,26 @@ const Input = styled.input`
   background: none;
   font-weight: 300;
   outline: none;
+
+  &:first-of-type {
+    width: 60%;
+    margin-bottom: 24px;
+  }
+
+  &:nth-of-type(2) {
+    width: calc(40% - 10px);
+    margin-left: 10px;
+    margin-bottom: 24px;
+  }
+
+  &:nth-of-type(3) {
+    width: 50%;
+  }
+
+  &:last-of-type {
+    width: calc(50% - 10px);
+    margin-left: 10px;
+  }
 
   &::placeholder {
     color: rgba(255, 255, 255, 0.3);

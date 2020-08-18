@@ -39,6 +39,26 @@ export const setClientData = (data) => ({
   payload: data,
 });
 
+export const setEditData = (data) => ({
+  type: 'SET_EDIT_DATA',
+  payload: data,
+});
+
+export const addClientData = (data) => ({
+  type: 'ADD_CLIENT_DATA',
+  payload: data,
+});
+
+export const addClientTributeData = (data) => ({
+  type: 'ADD_TRIBUTE_DATA',
+  payload: data,
+});
+
+export const addClientDirection = (data) => ({
+  type: 'ADD_CLIENT_DIRECTION',
+  payload: data,
+});
+
 export const setSA = (data) => ({
   type: 'SET_SUMA_ASEGURADA',
   payload: data,

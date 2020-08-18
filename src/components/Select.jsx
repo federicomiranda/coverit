@@ -9,6 +9,9 @@ const Select = ({
   options,
   elegirOpcion,
   elegirOpcionAnio,
+  elegirOpciondd,
+  elegirOpcionmm,
+  elegirOpcionaa,
   state = true,
   selectedValue,
 }) => {
@@ -18,7 +21,16 @@ const Select = ({
   useEffect(() => {
     if (options.length === 0) {
       setValue('');
-    } else if (options.length > 1) {
+    } else if (
+      options.length > 1
+             && type !== 'Documento'
+             && type !== 'dd'
+             && type !== 'mm'
+             && type !== 'aa'
+             && type !== 'Sexo'
+             && type !== 'IVA'
+             && type !== 'IIBB'
+    ) {
       openModal(true);
     }
   }, [options]);
@@ -35,10 +47,62 @@ const Select = ({
     setValue(option);
   };
 
+  const handleSelectdd = (option) => {
+    openModal(false);
+    elegirOpciondd(option);
+    setValue(option);
+  };
+
+  const handleSelectmm = (option) => {
+    openModal(false);
+    elegirOpcionmm(option);
+    setValue(option);
+  };
+
+  const handleSelectaa = (option) => {
+    openModal(false);
+    elegirOpcionaa(option);
+    setValue(option);
+  };
+
+  const handleSelectDNI = (option, id) => {
+    openModal(false);
+    elegirOpcion(option, id);
+    setValue(option);
+  };
+
+  const handleSelectSexo = (option, id) => {
+    openModal(false);
+    elegirOpcion(option, id);
+    setValue(option);
+  };
+
+  const handleSelectIva = (option, id) => {
+    openModal(false);
+    elegirOpcion(option, id);
+    setValue(option);
+  };
+
+  const handleSelectIibb = (option, id) => {
+    openModal(false);
+    elegirOpcion(option, id);
+    setValue(option);
+  };
+
   return (
     <>
       <FieldSeparator>
         <LabelSelect
+          id={
+            type === 'Documento'
+            || type === 'dd'
+            || type === 'mm'
+            || type === 'aa'
+            || type === 'Nacionalidad'
+            || type === 'Sexo'
+              ? 'blanco'
+              : ''
+          }
           className={!state ? 'disabled' : ''}
           htmlFor={name}
           onClick={() => {
@@ -53,18 +117,27 @@ const Select = ({
         </LabelSelect>
       </FieldSeparator>
 
-      {type !== 'Año' && modal && options.length > 1 && (
-        <ModalSelect>
-          {options.map((option) => (
-            <ItemModalSelect
-              onClick={() => handleSelect(option.name, option.id)}
-              key={option.id}
-            >
-              {option.name}
-              <InputModalSelect type="radio" name={name} value={option.id} />
-            </ItemModalSelect>
-          ))}
-        </ModalSelect>
+      {type !== 'Año'
+        && type !== 'Documento'
+        && type !== 'dd'
+        && type !== 'mm'
+        && type !== 'aa'
+        && type !== 'Sexo'
+        && type !== 'IVA'
+        && type !== 'IIBB'
+        && modal
+        && options.length > 1 && (
+          <ModalSelect>
+            {options.map((option) => (
+              <ItemModalSelect
+                onClick={() => handleSelect(option.name, option.id)}
+                key={option.id}
+              >
+                {option.name}
+                <InputModalSelect type="radio" name={name} value={option.id} />
+              </ItemModalSelect>
+            ))}
+          </ModalSelect>
       )}
 
       {type === 'Año' && modal && options && (
@@ -76,6 +149,120 @@ const Select = ({
             >
               {option.anio}
               <InputModalSelect type="radio" name={name} value={option.anio} />
+            </ItemModalSelect>
+          ))}
+        </ModalSelect>
+      )}
+
+      {type === 'Documento' && modal && options && (
+        <ModalSelect>
+          {options.map((option) => (
+            <ItemModalSelect
+              onClick={() => handleSelectDNI(option.description, option.name)}
+              key={option.id}
+            >
+              {option.description}
+              <InputModalSelect
+                type="radio"
+                name={name}
+                value={option.description}
+              />
+            </ItemModalSelect>
+          ))}
+        </ModalSelect>
+      )}
+
+      {type === 'dd' && modal && options && (
+        <ModalSelect>
+          {options.map((option) => (
+            <ItemModalSelect
+              onClick={() => handleSelectdd(option)}
+              key={option}
+            >
+              {option}
+              <InputModalSelect type="radio" name={name} value={option} />
+            </ItemModalSelect>
+          ))}
+        </ModalSelect>
+      )}
+
+      {type === 'mm' && modal && options && (
+        <ModalSelect>
+          {options.map((option) => (
+            <ItemModalSelect
+              onClick={() => handleSelectmm(option)}
+              key={option}
+            >
+              {option}
+              <InputModalSelect type="radio" name={name} value={option} />
+            </ItemModalSelect>
+          ))}
+        </ModalSelect>
+      )}
+
+      {type === 'aa' && modal && options && (
+        <ModalSelect>
+          {options.map((option) => (
+            <ItemModalSelect
+              onClick={() => handleSelectaa(option)}
+              key={option}
+            >
+              {option}
+              <InputModalSelect type="radio" name={name} value={option} />
+            </ItemModalSelect>
+          ))}
+        </ModalSelect>
+      )}
+
+      {type === 'Sexo' && modal && options && (
+        <ModalSelect>
+          {options.map((option) => (
+            <ItemModalSelect
+              onClick={() => handleSelectSexo(option.description, option.name)}
+              key={option.id}
+            >
+              {option.description}
+              <InputModalSelect
+                type="radio"
+                name={name}
+                value={option.description}
+              />
+            </ItemModalSelect>
+          ))}
+        </ModalSelect>
+      )}
+
+      {type === 'IVA' && modal && options && (
+        <ModalSelect>
+          {options.map((option) => (
+            <ItemModalSelect
+              onClick={() => handleSelectIva(option.description, option.name)}
+              key={option.id}
+            >
+              {option.description}
+              <InputModalSelect
+                type="radio"
+                name={name}
+                value={option.description}
+              />
+            </ItemModalSelect>
+          ))}
+        </ModalSelect>
+      )}
+
+      {type === 'IIBB' && modal && options && (
+        <ModalSelect>
+          {options.map((option) => (
+            <ItemModalSelect
+              onClick={() => handleSelectIva(option.description, option.name)}
+              key={option.id}
+            >
+              {option.description}
+              <InputModalSelect
+                type="radio"
+                name={name}
+                value={option.description}
+              />
             </ItemModalSelect>
           ))}
         </ModalSelect>
@@ -107,6 +294,10 @@ const LabelSelect = styled.label`
   color: var(--gris);
   padding: 5px;
   border: 1px solid var(--verde);
+
+  &#blanco {
+    color: #fff;
+  }
 
   &.disabled {
     pointer-events: none;

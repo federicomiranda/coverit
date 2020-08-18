@@ -13,6 +13,10 @@ import Paso5 from './components/pasos/Paso5';
 import Paso6 from './components/pasos/Paso6';
 import Paso7 from './components/pasos/Paso7';
 import Paso8 from './components/pasos/Paso8';
+import Paso9 from './components/pasos/Paso9';
+import Paso10 from './components/pasos/Paso10';
+import Paso11 from './components/pasos/Paso11';
+import Credito from './components/pasos/Credito';
 import { setToken } from './actions';
 
 function App() {
@@ -71,6 +75,18 @@ function App() {
         </Switch>
         <Switch>
           <Route exact path="/8/" component={Paso8} />
+        </Switch>
+        <Switch>
+          <Route exact path="/9/" component={Paso9} />
+        </Switch>
+        <Switch>
+          <Route exact path="/10/" component={Paso10} />
+        </Switch>
+        <Switch>
+          <Route exact path="/11/" component={Paso11} />
+        </Switch>
+        <Switch>
+          <Route exact path="/tarjeta-de-credito/" component={Credito} />
         </Switch>
       </Router>
       <GlobalStyle />

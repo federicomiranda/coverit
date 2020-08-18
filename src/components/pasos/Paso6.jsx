@@ -73,8 +73,10 @@ const Paso6 = () => {
           for (let i = 0; i < coberturas.length; i++) {
             if (i == cotizacion.categoria_cobertura) {
               arr_coberturas.push({
+                id: cotizacion.id,
                 nombre: coberturas[i].nombre,
                 descripcion: coberturas[i].descripcion,
+                cuota: cotizacion.cuota,
               });
             }
           }
