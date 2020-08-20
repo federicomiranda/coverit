@@ -23,6 +23,14 @@ const Paso5 = () => {
   const localidad = useSelector((state) => state.loc);
   const sumaAsegurada = useSelector((state) => state.sumaAsegurada);
 
+  let tipoVehiculo;
+
+  if (vehiculo === 'auto') {
+    tipoVehiculo = 'vehiculo';
+  } else if (vehiculo === 'moto') {
+    tipoVehiculo = 'moto';
+  }
+
   const BASE_URL = process.env.REACT_APP_API_URL;
 
   useEffect(() => {
@@ -45,7 +53,7 @@ const Paso5 = () => {
       .catch((error) => console.log('error', error));
 
     fetch(
-      `${BASE_URL}/cotizar?nombre=${cliente.nombre}&apellido=${cliente.apellido}&edad=${cliente.edad}&email=${cliente.email}&celular=${cliente.tel}&localidad_id=${localidad.idLocElegida}&version_id=${asegurar.idVersionElegida}&anio=${asegurar.anioElegido}&tipo=vehiculo&tipo_uso=particular`,
+      `${BASE_URL}/cotizar?nombre=${cliente.nombre}&apellido=${cliente.apellido}&edad=${cliente.edad}&email=${cliente.email}&celular=${cliente.tel}&localidad_id=${localidad.idLocElegida}&version_id=${asegurar.idVersionElegida}&anio=${asegurar.anioElegido}&tipo=${tipoVehiculo}&tipo_uso=particular`,
       {
         method: 'POST',
         headers: {

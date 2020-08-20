@@ -49,7 +49,7 @@ const Credito = () => {
 
   const handleContinue = () => {
     fetch(
-      `${BASE_URL}/solicitar-emision?cotizacion_id=${coberturaSeleccionada.id}&tipo_documento=${cliente.dniElegido}&documento=${cliente.dniValue}&sexo=${cliente.sexo}&cuit=${cliente.CUIT}&situacion_afip=${cliente.condicionIVA}&iibb=${cliente.condicionIIBB}&patente=${dataVehiculo.patente}&chasis=${dataVehiculo.chasis}&motor=${dataVehiculo.motor}&anios_siniestros=0&calle=${cliente.calle}&numero=${cliente.nro}&vigencia_desde=2020-09-01&numero_tarjeta${nroTarjeta}&telefono=${cliente.tel}&estado_civil=2`,
+      `${BASE_URL}/solicitar-emision?cotizacion_id=${coberturaSeleccionada.id}&tipo_documento=${cliente.dniElegido}&documento=${cliente.dniValue}&sexo=${cliente.sexo}&cuit=${cliente.CUILT}&situacion_afip=${cliente.condicionIVA}&iibb=${cliente.condicionIIBB}&patente=${dataVehiculo.patente}&chasis=${dataVehiculo.chasis}&motor=${dataVehiculo.motor}&anios_siniestros=0&calle=${cliente.calle}&numero=${cliente.nro}&vigencia_desde=2020-09-01&numero_tarjeta=${nroTarjeta}&telefono=${cliente.tel}&estado_civil=1`,
       {
         method: 'POST',
         headers: {
@@ -61,9 +61,10 @@ const Credito = () => {
     )
       .then((response) => response.json())
       .then((result) => {
-        if (result.status) {
-          history.push('/12/');
-        }
+        console.log(result);
+        // if (result.status) {
+        //   history.push('/12/');
+        // }
       })
       .catch((error) => console.log('error', error));
   };

@@ -127,76 +127,93 @@ const Paso6 = () => {
                       {new Intl.NumberFormat('de-DE').format(sumaAsegurada)}
                     </SumaAseguradaValue>
                     <SumaAseguradaText>Suma asegurada</SumaAseguradaText>
-                    <SumaAseguradaImg
-                      src={SwissMedical}
-                      alt="Swiss Medical Seguros"
-                    />
+
+                    {cots.length > 0 && (
+                      <SumaAseguradaImg
+                        src={SwissMedical}
+                        alt="Swiss Medical Seguros"
+                      />
+                    )}
                   </SumaAseguradaContainer>
 
                   <CotizacionesContainer id="cotizaciones_container">
-                    <Carousel
-                      autoPlay={false}
-                      showThumbs={false}
-                      showStatus={false}
-                      dynamicHeight={false}
-                      showArrows={cots.length > 1}
-                      showIndicators={cots.length > 1}
-                      infiniteLoop
-                    >
-                      {cots.map((cotizacion) => {
-                        let cobertura = null;
+                    {cots.length > 0 ? (
+                      <>
+                        <Carousel
+                          autoPlay={false}
+                          showThumbs={false}
+                          showStatus={false}
+                          dynamicHeight={false}
+                          showArrows={cots.length > 1}
+                          showIndicators={cots.length > 1}
+                          infiniteLoop
+                        >
+                          {cots.map((cotizacion) => {
+                            let cobertura = null;
 
-                        for (let i = 0; i < coberturas.length; i++) {
-                          if (i == cotizacion.categoria_cobertura) {
-                            cobertura = {
-                              nombre: coberturas[i].nombre,
-                              descripcion: coberturas[i].descripcion,
-                            };
-                          }
-                        }
+                            for (let i = 0; i < coberturas.length; i++) {
+                              if (i == cotizacion.categoria_cobertura) {
+                                cobertura = {
+                                  nombre: coberturas[i].nombre,
+                                  descripcion: coberturas[i].descripcion,
+                                };
+                              }
+                            }
 
-                        return (
-                          <CotizacionesItem
-                            key={cotizacion.id}
-                            id={cotizacion.id}
-                          >
-                            <CotizacionesItemCobertura>
-                              {cobertura.nombre}
-                            </CotizacionesItemCobertura>
-                            <CotizacionesItemVerDetalle
-                              onClick={() => handleDetalle(cobertura)}
-                            >
-                              ver detalle
-                            </CotizacionesItemVerDetalle>
-                            <CotizacionesItemCuota>
-                              $
-                              {' '}
-                              <span>{cotizacion.cuota}</span>
-                            </CotizacionesItemCuota>
-                            <CotizacionesItemAclaracionCuota>
-                              Valor cuota
-                              {' '}
-                              <span>(Mensual)</span>
-                            </CotizacionesItemAclaracionCuota>
-                            <CotizacionesItemDescuentoContainer>
-                              <CotizacionesItemDescuentoTachado>
-                                $
-                                {(cotizacion.cuota * 1.35).toFixed(2)}
-                              </CotizacionesItemDescuentoTachado>
-                              <CotizacionesItemDescuentoOff>
-                                35% OFF
-                              </CotizacionesItemDescuentoOff>
-                            </CotizacionesItemDescuentoContainer>
-                          </CotizacionesItem>
-                        );
-                      })}
-                    </Carousel>
-                    <BtnContinue onClick={handleContratacion}>
-                      Ir a contratación online
-                    </BtnContinue>
-                    <BtnAsistencia onClick={() => handleAsistencia(true)}>
-                      Solicitar asistencia
-                    </BtnAsistencia>
+                            return (
+                              <CotizacionesItem
+                                key={cotizacion.id}
+                                id={cotizacion.id}
+                              >
+                                <CotizacionesItemCobertura>
+                                  {cobertura.nombre}
+                                </CotizacionesItemCobertura>
+                                <CotizacionesItemVerDetalle
+                                  onClick={() => handleDetalle(cobertura)}
+                                >
+                                  ver detalle
+                                </CotizacionesItemVerDetalle>
+                                <CotizacionesItemCuota>
+                                  $
+                                  {' '}
+                                  <span>{cotizacion.cuota}</span>
+                                </CotizacionesItemCuota>
+                                <CotizacionesItemAclaracionCuota>
+                                  Valor cuota
+                                  {' '}
+                                  <span>(Mensual)</span>
+                                </CotizacionesItemAclaracionCuota>
+                                <CotizacionesItemDescuentoContainer>
+                                  <CotizacionesItemDescuentoTachado>
+                                    $
+                                    {(cotizacion.cuota * 1.35).toFixed(2)}
+                                  </CotizacionesItemDescuentoTachado>
+                                  <CotizacionesItemDescuentoOff>
+                                    35% OFF
+                                  </CotizacionesItemDescuentoOff>
+                                </CotizacionesItemDescuentoContainer>
+                              </CotizacionesItem>
+                            );
+                          })}
+                        </Carousel>
+                        <BtnContinue onClick={handleContratacion}>
+                          Ir a contratación online
+                        </BtnContinue>
+                        <BtnAsistencia onClick={() => handleAsistencia(true)}>
+                          Solicitar asistencia
+                        </BtnAsistencia>
+                      </>
+                    ) : (
+                      <>
+                        <NoTenemos>
+                          Actualmente no tenemos propuestas disponibles para tu
+                          cobertura...
+                        </NoTenemos>
+                        <BtnAsistencia onClick={() => handleAsistencia(true)}>
+                          Solicitar asistencia
+                        </BtnAsistencia>
+                      </>
+                    )}
                   </CotizacionesContainer>
 
                   {asistencia && (
@@ -212,6 +229,7 @@ const Paso6 = () => {
                         onClick={() => handleDetalle(null)}
                       />
                     </DetalleVolver>
+                    {}
                     <DetalleImg
                       src={SwissMedical}
                       alt="Swiss Medical Seguros"
@@ -520,4 +538,11 @@ const DetalleDescripcion = styled.p`
     background: #e1efef;
     border-radius: 20px;
   }
+`;
+
+const NoTenemos = styled.p`
+  text-align: center;
+  margin-bottom: 24px;
+  font-size: 18px;
+  color: var(--azul);
 `;

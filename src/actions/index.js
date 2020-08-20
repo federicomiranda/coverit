@@ -54,6 +54,11 @@ export const addClientTributeData = (data) => ({
   payload: data,
 });
 
+export const addClientPersonalData = (data) => ({
+  type: 'ADD_PERSONAL_DATA',
+  payload: data,
+});
+
 export const addClientDirection = (data) => ({
   type: 'ADD_CLIENT_DIRECTION',
   payload: data,

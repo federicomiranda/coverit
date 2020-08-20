@@ -8,7 +8,11 @@ import SolicitarAsistencia from '../SolicitarAsistencia';
 import EditData from '../EditData';
 import ProgressBar from '../ProgressBar';
 import Select from '../Select';
-import { addClientData, addClientTributeData } from '../../actions';
+import {
+  addClientData,
+  addClientTributeData,
+  addClientPersonalData,
+} from '../../actions';
 
 const Paso9 = () => {
   const dispatch = useDispatch();
@@ -44,6 +48,7 @@ const Paso9 = () => {
   const [iibbElegido, setIibbElegido] = useState('');
   const [idIibbElegido, setIdIibbElegido] = useState('');
 
+  // const [cuilValue, setCuilValue] = useState('');
   const [cuitValue, setCuitValue] = useState('');
   const [iibbValue, setIibbValue] = useState('');
 
@@ -90,16 +95,50 @@ const Paso9 = () => {
       }),
     );
 
-    setDatosTributarios(true);
-    // history.push('/10/');
+    if (dniElegido !== 'C.U.I.T.') {
+      let idSexo;
+
+      if (idSexoElegido === '0') {
+        idSexo = '2';
+      } else if (idSexoElegido === '1') {
+        idSexo = '1';
+      }
+
+      fetch(
+        `${BASE_URL}/generar-cuit?documento=${dniValue}&sexo=${idSexo}&tipo=1`,
+        {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          redirect: 'follow',
+        },
+      )
+        .then((response) => response.json())
+        .then((result) => {
+          dispatch(
+            addClientPersonalData({
+              CUILT: result.numero,
+              condicionIVA: '5',
+              condicionIIBB: '3',
+            }),
+          );
+        })
+        .catch((error) => console.log('error', error));
+
+      history.push('/10/');
+    } else {
+      setDatosTributarios(true);
+    }
   };
 
   const handleContinueTributario = () => {
     dispatch(
       addClientTributeData({
-        CUIT: cuitValue,
+        CUILT: cuitValue,
         condicionIVA: idIvaElegido,
-        condicionIIBB: idIibbElegido,
+        condicionIIBB: idIibbElegido || '3',
         IIBB: iibbValue,
       }),
     );
@@ -118,7 +157,16 @@ const Paso9 = () => {
     })
       .then((response) => response.json())
       .then((result) => {
-        setTipoDni(result);
+        const tiposValidos = [];
+
+        for (let i = 0; i < result.length; i++) {
+          if (result[i].id === 7) {
+            tiposValidos.push(result[i]);
+          } else if (result[i].id === 8) {
+            tiposValidos.push(result[i]);
+          }
+        }
+        setTipoDni(tiposValidos);
       })
       .catch((error) => console.log('error', error));
   }, []);
@@ -201,6 +249,10 @@ const Paso9 = () => {
 
   const handleChangeDNI = (e) => {
     setDniValue(e.target.value);
+
+    if (dniElegido === 'C.U.I.T.') {
+      setCuitValue(e.target.value);
+    }
   };
 
   const elegirdd = (value) => {
@@ -418,6 +470,7 @@ const Paso9 = () => {
                       name="CUIT"
                       id="CUIT"
                       placeholder="CUIT"
+                      value={cuitValue || ''}
                       onChange={handleChangeCuit}
                     />
                   </FieldSeparator>

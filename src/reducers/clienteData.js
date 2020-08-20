@@ -27,10 +27,19 @@ const clientData = (state = '', action) => {
     case 'ADD_TRIBUTE_DATA': {
       state = {
         ...state,
-        CUIT: action.payload.CUIT,
+        CUILT: action.payload.CUILT,
         condicionIVA: action.payload.condicionIVA,
         condicionIIBB: action.payload.condicionIIBB,
         IIBB: action.payload.IIBB,
+      };
+      return state;
+    }
+    case 'ADD_PERSONAL_DATA': {
+      state = {
+        ...state,
+        CUILT: action.payload.CUILT,
+        condicionIVA: action.payload.condicionIVA,
+        condicionIIBB: action.payload.condicionIIBB,
       };
       return state;
     }
