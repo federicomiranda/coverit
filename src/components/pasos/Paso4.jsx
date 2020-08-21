@@ -97,6 +97,7 @@ const Paso4 = () => {
                 placeholder="Nombre completo"
                 onChange={handleChangeNombre}
                 value={nombre}
+                maxLength="40"
               />
             </FieldSeparator>
 
@@ -108,19 +109,19 @@ const Paso4 = () => {
                 placeholder="Apellido"
                 onChange={handleChangeApellido}
                 value={apellido}
+                maxLength="80"
               />
             </FieldSeparator>
 
             <FieldSeparator>
               <Input
-                type="number"
+                type="text"
                 name="edad"
                 id="edad"
                 placeholder="Edad"
                 onChange={handleChangeEdad}
                 value={edad}
-                max="99"
-                min="18"
+                maxLength="2"
               />
             </FieldSeparator>
 
@@ -132,17 +133,19 @@ const Paso4 = () => {
                 placeholder="Correo electrónico"
                 onChange={handleChangeEmail}
                 value={email}
+                maxLength="80"
               />
             </FieldSeparator>
 
             <FieldSeparator>
               <Input
-                type="number"
+                type="tel"
                 name="tel"
                 id="tel"
                 placeholder="Celular ej 1122334455"
                 onChange={handleChangeTel}
                 value={tel}
+                maxLength="10"
               />
               <Disclaimer>Código de área sin 0 y sin 15</Disclaimer>
             </FieldSeparator>
@@ -154,7 +157,22 @@ const Paso4 = () => {
 
               <BtnContinue
                 className={
-                  nombre && apellido && edad && email && tel ? '' : 'disabled'
+                  nombre
+                  && /^([a-z ñáàãéèëêíìîïóõöôòúùûü]{2,40})$/i.test(nombre)
+                  && apellido
+                  && /^([a-z ñáàãéèëêíìîïóõöôòúùûü]{2,80})$/i.test(apellido)
+                  && parseInt(edad)
+                  && parseInt(edad) >= 18
+                  && parseInt(edad) <= 100
+                  && email
+                  && /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
+                    email,
+                  )
+                  && tel
+                  && tel.length > 8
+                  && tel.length < 12
+                    ? ''
+                    : 'disabled'
                 }
               >
                 <Link onClick={saveData} to="/5/">

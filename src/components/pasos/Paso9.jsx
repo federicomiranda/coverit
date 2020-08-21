@@ -350,11 +350,13 @@ const Paso9 = () => {
 
                     <FieldSeparator>
                       <Input
-                        type="number"
+                        type="text"
                         name="dni"
                         id="dni"
                         placeholder="12345678"
                         onChange={handleChangeDNI}
+                        minLength="7"
+                        maxLength="11"
                       />
                     </FieldSeparator>
 
@@ -446,7 +448,23 @@ const Paso9 = () => {
                     />
                   </Form>
 
-                  <BtnContinue onClick={handleContinue}>Continuar</BtnContinue>
+                  <BtnContinue
+                    className={
+                      dniElegido
+                      && parseInt(dniValue)
+                      && dniValue.length >= 7
+                      && ddElegido
+                      && mmElegido
+                      && aaElegido
+                      && paisElegido
+                      && sexoElegido
+                        ? ''
+                        : 'disabled'
+                    }
+                    onClick={handleContinue}
+                  >
+                    Continuar
+                  </BtnContinue>
                   <BtnAsistencia onClick={() => handleAsistencia(true)}>
                     Solicitar asistencia
                   </BtnAsistencia>
@@ -687,6 +705,15 @@ const BtnContinue = styled.div`
   color: #fff;
   font-size: 16px;
   text-transform: uppercase;
+
+  &.disabled {
+    background: var(--verde-disabled);
+    border: 2px solid var(--verde-disabled);
+  }
+
+  &.disabled a {
+    pointer-events: none;
+  }
 `;
 
 const BtnAsistencia = styled.button`

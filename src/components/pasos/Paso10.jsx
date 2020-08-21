@@ -127,7 +127,17 @@ const Paso10 = () => {
                 </FieldSeparator>
               </Form>
 
-              <BtnContinue onClick={handleContinue}>Continuar</BtnContinue>
+              <BtnContinue
+                className={
+                  calle
+                  && nro
+                    ? ''
+                    : 'disabled'
+                }
+                onClick={handleContinue}
+              >
+                Continuar
+              </BtnContinue>
               <BtnAsistencia onClick={() => handleAsistencia(true)}>
                 Solicitar asistencia
               </BtnAsistencia>
@@ -301,6 +311,15 @@ const BtnContinue = styled.div`
   color: #fff;
   font-size: 16px;
   text-transform: uppercase;
+
+  &.disabled {
+    background: var(--verde-disabled);
+    border: 2px solid var(--verde-disabled);
+  }
+
+  &.disabled a {
+    pointer-events: none;
+  }
 `;
 
 const BtnAsistencia = styled.button`

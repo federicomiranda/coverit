@@ -17,6 +17,7 @@ const Select = ({
 }) => {
   const [modal, openModal] = useState(false);
   const [value, setValue] = useState('');
+  const [optionsSearch, setOptionsSearch] = useState([]);
 
   useEffect(() => {
     if (options.length === 0) {
@@ -30,6 +31,7 @@ const Select = ({
              && type !== 'Sexo'
              && type !== 'IVA'
              && type !== 'IIBB'
+             && type !== 'Formas de pago'
     ) {
       openModal(true);
     }
@@ -71,6 +73,12 @@ const Select = ({
     setValue(option);
   };
 
+  const handleSelectFormasPagos = (option, id) => {
+    openModal(false);
+    elegirOpcion(option, id);
+    setValue(option);
+  };
+
   const handleSelectSexo = (option, id) => {
     openModal(false);
     elegirOpcion(option, id);
@@ -89,9 +97,24 @@ const Select = ({
     setValue(option);
   };
 
+  const handleSearch = (e) => {
+    const newOptions = [];
+
+    if (e.target.value.length >= 3) {
+      for (let i = 0; i < options.length; i++) {
+        if (options[i].name.toLowerCase().includes(e.target.value.toLowerCase())) {
+          newOptions.push(options[i]);
+        }
+      }
+      setOptionsSearch(newOptions);
+    } else {
+      setOptionsSearch([]);
+    }
+  };
+
   return (
     <>
-      <FieldSeparator>
+      <FieldSeparator className={type === 'Formas de pago' ? 'fdp' : ''}>
         <LabelSelect
           id={
             type === 'Documento'
@@ -100,6 +123,7 @@ const Select = ({
             || type === 'aa'
             || type === 'Nacionalidad'
             || type === 'Sexo'
+            || type === 'Formas de pago'
               ? 'blanco'
               : ''
           }
@@ -111,9 +135,11 @@ const Select = ({
         >
           {selectedValue || value || type}
           {' '}
-          <SelectIconContainer>
-            <FontAwesomeIcon icon={faSortDown} />
-          </SelectIconContainer>
+          {options.length > 1 && (
+            <SelectIconContainer>
+              <FontAwesomeIcon icon={faSortDown} />
+            </SelectIconContainer>
+          )}
         </LabelSelect>
       </FieldSeparator>
 
@@ -125,18 +151,44 @@ const Select = ({
         && type !== 'Sexo'
         && type !== 'IVA'
         && type !== 'IIBB'
+        && type !== 'Formas de pago'
         && modal
         && options.length > 1 && (
           <ModalSelect>
-            {options.map((option) => (
-              <ItemModalSelect
-                onClick={() => handleSelect(option.name, option.id)}
-                key={option.id}
-              >
-                {option.name}
-                <InputModalSelect type="radio" name={name} value={option.id} />
-              </ItemModalSelect>
-            ))}
+            <input type="search" placeholder="Buscar" onChange={handleSearch} />
+            {optionsSearch.length > 0 ? (
+              <>
+                {optionsSearch.map((option) => (
+                  <ItemModalSelect
+                    onClick={() => handleSelect(option.name, option.id)}
+                    key={option.id}
+                  >
+                    {option.name}
+                    <InputModalSelect
+                      type="radio"
+                      name={name}
+                      value={option.id}
+                    />
+                  </ItemModalSelect>
+                ))}
+              </>
+            ) : (
+              <>
+                {options.map((option) => (
+                  <ItemModalSelect
+                    onClick={() => handleSelect(option.name, option.id)}
+                    key={option.id}
+                  >
+                    {option.name}
+                    <InputModalSelect
+                      type="radio"
+                      name={name}
+                      value={option.id}
+                    />
+                  </ItemModalSelect>
+                ))}
+              </>
+            )}
           </ModalSelect>
       )}
 
@@ -267,6 +319,24 @@ const Select = ({
           ))}
         </ModalSelect>
       )}
+
+      {type === 'Formas de pago' && modal && options && (
+        <ModalSelect>
+          {options.map((option) => (
+            <ItemModalSelect
+              onClick={() => handleSelectFormasPagos(option.description, option.name)}
+              key={option.id}
+            >
+              {option.description}
+              <InputModalSelect
+                type="radio"
+                name={name}
+                value={option.description}
+              />
+            </ItemModalSelect>
+          ))}
+        </ModalSelect>
+      )}
     </>
   );
 };
@@ -282,7 +352,11 @@ export default Select;
  */
 
 const FieldSeparator = styled.div`
-   margin-bottom: 24px;
+  margin-bottom: 24px;
+    
+  &.fdp {
+    width: 100%;
+  }
  `;
 
 const LabelSelect = styled.label`

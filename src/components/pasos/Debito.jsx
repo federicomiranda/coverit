@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Redirect, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
@@ -6,32 +6,23 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
 import SolicitarAsistencia from '../SolicitarAsistencia';
 import ProgressBar from '../ProgressBar';
-import Select from '../Select';
 
 import SwissMedical from '../../assets/sm_seguros.png';
 
-const Credito = () => {
+const Debito = () => {
   const history = useHistory();
 
   const vehiculo = useSelector((state) => state.vehiculo);
   const coberturaSeleccionada = useSelector(
     (state) => state.coberturaSeleccionada,
   );
-  const cliente = useSelector(
-    (state) => state.cliente,
-  );
-  const dataVehiculo = useSelector(
-    (state) => state.dataVehiculo,
-  );
+  const cliente = useSelector((state) => state.cliente);
+  const dataVehiculo = useSelector((state) => state.dataVehiculo);
   const sumaAsegurada = useSelector((state) => state.sumaAsegurada);
 
   const [asistencia, setAsistencia] = useState(false);
   const [nombre, setNombre] = useState('');
   const [nroTarjeta, setNroTarjeta] = useState('');
-  const [formasPagos, setFormasPagos] = useState([]);
-
-  const [formaPagoElegida, setFormaPagoElegida] = useState('');
-  const [idFormaPagoElegida, setIdFormaPagoElegida] = useState(null);
 
   const handleAsistencia = (value) => {
     setAsistencia(value);
@@ -72,27 +63,6 @@ const Credito = () => {
         // }
       })
       .catch((error) => console.log('error', error));
-  };
-
-  useEffect(() => {
-    fetch(`${BASE_URL}/catalogos/forma-de-pago`, {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      redirect: 'follow',
-    })
-      .then((response) => response.json())
-      .then((result) => {
-        setFormasPagos(result);
-      })
-      .catch((error) => console.log('error', error));
-  }, []);
-
-  const elegirFormaPago = (value, id) => {
-    setFormaPagoElegida(value);
-    setIdFormaPagoElegida(id);
   };
 
   return (
@@ -159,28 +129,19 @@ const Credito = () => {
                 <p>
                   Forma de pago:
                   {' '}
-                  <span>Tarjeta de crédito</span>
+                  <span>Débito automático</span>
                 </p>
                 <FieldSeparator>
                   <Input
                     type="text"
                     name="nombre"
-                    placeholder="Nombre en la tarjeta"
+                    placeholder="Nombre completo"
                     onChange={handleNombre}
                   />
-
-                  <Select
-                    type="Formas de pago"
-                    name="formasDePago"
-                    options={formasPagos || []}
-                    elegirOpcion={elegirFormaPago}
-                    selectedValue={formaPagoElegida}
-                  />
-
                   <Input
                     type="number"
                     name="tarjeta"
-                    placeholder="Nro de tarjeta. Ej: 1234123412341234"
+                    placeholder="CBU. Ej: 1234123412341234"
                     onChange={handleNroTarjeta}
                   />
                 </FieldSeparator>
@@ -202,7 +163,7 @@ const Credito = () => {
   );
 };
 
-export default Credito;
+export default Debito;
 
 /*
  *

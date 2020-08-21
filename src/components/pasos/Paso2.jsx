@@ -20,11 +20,14 @@ const Paso2 = () => {
   const [idLocElegida, setIdLocElegida] = useState(null);
   const [localidades, setLocalidades] = useState([]);
 
+  const [loader, setLoader] = useState(false);
+
   const BASE_URL = process.env.REACT_APP_API_URL;
 
   useEffect(() => {
     setLocalidades([]);
     if (cp.length === 4) {
+      setLoader(true);
       fetch(`${BASE_URL}/localidades?codigo_postal=${cp}`, {
         method: 'POST',
         headers: {
@@ -37,6 +40,7 @@ const Paso2 = () => {
         .then((response) => response.json())
         .then((result) => {
           setLocalidades(result);
+          setLoader(false);
         })
         .catch((error) => console.log('error', error));
     }
@@ -126,7 +130,9 @@ const Paso2 = () => {
 
               <BtnContinue className={!locElegida ? 'disabled' : ''}>
                 {/* <BtnContinue> */}
-                <Link onClick={saveData} to="/3/">Continuar</Link>
+                <Link onClick={saveData} to="/3/">
+                  Continuar
+                </Link>
               </BtnContinue>
             </Btns>
           </Form>
