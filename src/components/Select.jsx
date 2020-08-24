@@ -155,7 +155,7 @@ const Select = ({
         && modal
         && options.length > 1 && (
           <ModalSelect>
-            <input type="search" placeholder="Buscar" onChange={handleSearch} />
+            <InputSearch type="search" placeholder="Buscar" onChange={handleSearch} />
             {optionsSearch.length > 0 ? (
               <>
                 {optionsSearch.map((option) => (
@@ -397,7 +397,7 @@ const ModalSelect = styled.div`
   width: 80%;
   height: 80vh;
   left: 10%;
-  top: 10vh;
+  top: 0;
   background: rgba(0, 0, 0, 0.8);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
   padding: 20px;
@@ -416,4 +416,14 @@ const ItemModalSelect = styled.label`
 
 const InputModalSelect = styled.label`
   display: none;
+`;
+
+const InputSearch = styled.input`
+  border: none;
+  padding: 5px;
+  font-size: 16px;
+  color: var(--gris);
+  margin-bottom: 12px;
+  display: block;
+  width: 100%;
 `;

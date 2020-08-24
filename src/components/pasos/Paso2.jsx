@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Redirect, Link } from 'react-router-dom';
 import styled from 'styled-components';
+import Loader from 'react-loader-spinner';
 import ProgressBar from '../ProgressBar';
 import Select from '../Select';
 import {
@@ -102,8 +103,20 @@ const Paso2 = () => {
                 value={cp}
                 minLength="4"
                 maxLength="4"
-                inputmode="numeric"
               />
+              {loader ? (
+                <LoaderContainer>
+                  <Loader
+                    type="ThreeDots"
+                    color="#8dccc3"
+                    width={35}
+                    height={20}
+                    timeout={10000}
+                  />
+                </LoaderContainer>
+              ) : (
+                ''
+              )}
               <LabelCP htmlFor="cp">
                 Si no conoces tu código postal, buscalo
                 {' '}
@@ -177,6 +190,7 @@ const Form = styled.form`
 
 const FieldSeparator = styled.div`
   margin-bottom: 24px;
+  position: relative;
 `;
 
 const InputCP = styled.input`
@@ -186,6 +200,12 @@ const InputCP = styled.input`
   color: var(--gris);
   padding: 5px;
   border: 1px solid var(--verde);
+`;
+
+const LoaderContainer = styled.div`
+  position: absolute;
+  right: 10px;
+  top: 6px;
 `;
 
 const LabelCP = styled.label`

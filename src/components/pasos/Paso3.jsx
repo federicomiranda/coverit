@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Redirect, Link } from 'react-router-dom';
 import styled from 'styled-components';
+import Loader from 'react-loader-spinner';
 import ProgressBar from '../ProgressBar';
 import Select from '../Select';
 import {
@@ -31,11 +32,17 @@ const Paso2 = () => {
   const [anios, setAnios] = useState([]);
   const [versiones, setVersiones] = useState([]);
 
+  const [loaderMarca, setLoaderMarca] = useState(false);
+  const [loaderModelo, setLoaderModelo] = useState(false);
+  const [loaderAnio, setLoaderAnio] = useState(false);
+  const [loaderVersion, setLoaderVersion] = useState(false);
+
   useEffect(() => {
     setMarcas([]);
     setModelos([]);
     setAnios([]);
     setVersiones([]);
+    setLoaderMarca(true);
     fetch(`${BASE_URL}/marcas?tipo=${vehiculo}`, {
       method: 'POST',
       headers: {
@@ -48,6 +55,7 @@ const Paso2 = () => {
       .then((response) => response.json())
       .then((result) => {
         setMarcas(result);
+        setLoaderMarca(false);
       })
       .catch((error) => console.log('error', error));
   }, []);
@@ -63,6 +71,7 @@ const Paso2 = () => {
     setModelos([]);
     setAnios([]);
     setVersiones([]);
+    setLoaderModelo(true);
     fetch(`${BASE_URL}/modelos?brand_id=${idMarcaElegida}`, {
       method: 'POST',
       headers: {
@@ -75,6 +84,7 @@ const Paso2 = () => {
       .then((response) => response.json())
       .then((result) => {
         setModelos(result);
+        setLoaderModelo(false);
       })
       .catch((error) => console.log('error', error));
   }, [idMarcaElegida]);
@@ -89,6 +99,7 @@ const Paso2 = () => {
   useEffect(() => {
     setAnios([]);
     setVersiones([]);
+    setLoaderAnio(true);
     fetch(`${BASE_URL}/anios?brand_id=${idMarcaElegida}&model_id=${idModeloElegido}`, {
       method: 'POST',
       headers: {
@@ -101,12 +112,14 @@ const Paso2 = () => {
       .then((response) => response.json())
       .then((result) => {
         setAnios(result);
+        setLoaderAnio(false);
       })
       .catch((error) => console.log('error', error));
   }, [idModeloElegido]);
 
   useEffect(() => {
     setVersiones([]);
+    setLoaderVersion(true);
     fetch(
       `${BASE_URL}/versiones?brand_id=${idMarcaElegida}&model_id=${idModeloElegido}&anio=${anioElegido}`,
       {
@@ -121,6 +134,7 @@ const Paso2 = () => {
       .then((response) => response.json())
       .then((result) => {
         setVersiones(result);
+        setLoaderVersion(false);
       })
       .catch((error) => console.log('error', error));
   }, [anioElegido]);
@@ -192,40 +206,100 @@ const Paso2 = () => {
           </Title>
 
           <Form onSubmit={stopSubmit}>
-            <Select
-              type="Marca"
-              name="marca"
-              options={marcas || []}
-              elegirOpcion={elegirMarca}
-              selectedValue={marcaElegida}
-            />
+            <FieldSeparator>
+              <Select
+                type="Marca"
+                name="marca"
+                options={marcas || []}
+                elegirOpcion={elegirMarca}
+                selectedValue={marcaElegida}
+              />
+              {loaderMarca ? (
+                <LoaderContainer>
+                  <Loader
+                    type="ThreeDots"
+                    color="#8dccc3"
+                    width={35}
+                    height={20}
+                    timeout={10000}
+                  />
+                </LoaderContainer>
+              ) : (
+                ''
+              )}
+            </FieldSeparator>
 
-            <Select
-              state={!!marcaElegida}
-              type="Modelo"
-              name="modelo"
-              options={modelos || []}
-              elegirOpcion={elegirModelo}
-              selectedValue={modeloElegido}
-            />
+            <FieldSeparator>
+              <Select
+                state={!!marcaElegida}
+                type="Modelo"
+                name="modelo"
+                options={modelos || []}
+                elegirOpcion={elegirModelo}
+                selectedValue={modeloElegido}
+              />
+              {loaderModelo ? (
+                <LoaderContainer>
+                  <Loader
+                    type="ThreeDots"
+                    color="#8dccc3"
+                    width={35}
+                    height={20}
+                    timeout={10000}
+                  />
+                </LoaderContainer>
+              ) : (
+                ''
+              )}
+            </FieldSeparator>
 
-            <Select
-              state={!!modeloElegido}
-              type="Año"
-              name="anio"
-              options={anios || []}
-              elegirOpcionAnio={elegirAnio}
-              selectedValue={anioElegido}
-            />
+            <FieldSeparator>
+              <Select
+                state={!!modeloElegido}
+                type="Año"
+                name="anio"
+                options={anios || []}
+                elegirOpcionAnio={elegirAnio}
+                selectedValue={anioElegido}
+              />
+              {loaderAnio ? (
+                <LoaderContainer>
+                  <Loader
+                    type="ThreeDots"
+                    color="#8dccc3"
+                    width={35}
+                    height={20}
+                    timeout={10000}
+                  />
+                </LoaderContainer>
+              ) : (
+                ''
+              )}
+            </FieldSeparator>
 
-            <Select
-              state={!!anioElegido}
-              type="Versión"
-              name="version"
-              options={versiones || []}
-              elegirOpcion={elegirVersion}
-              selectedValue={versionElegida}
-            />
+            <FieldSeparator>
+              <Select
+                state={!!anioElegido}
+                type="Versión"
+                name="version"
+                options={versiones || []}
+                elegirOpcion={elegirVersion}
+                selectedValue={versionElegida}
+              />
+              {loaderVersion ? (
+                <LoaderContainer>
+                  <Loader
+                    type="ThreeDots"
+                    color="#8dccc3"
+                    width={35}
+                    height={20}
+                    timeout={10000}
+                  />
+                </LoaderContainer>
+              ) : (
+                ''
+              )}
+            </FieldSeparator>
 
             <GncContainer>
               <GncFirstColumn>
@@ -443,4 +517,14 @@ const GncOptionsLabelSi = styled.label`
   & input {
     display: none;
   }
+`;
+
+const FieldSeparator = styled.div`
+  position: relative;
+`;
+
+const LoaderContainer = styled.div`
+  position: absolute;
+  right: 10px;
+  top: 6px;
 `;

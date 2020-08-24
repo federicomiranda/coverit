@@ -1,23 +1,24 @@
-import React from "react";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import { spring, AnimatedSwitch } from "react-router-transition";
-import { createGlobalStyle } from "styled-components";
-import { useDispatch } from "react-redux";
-import Header from "./components/Header";
-import Paso1 from "./components/pasos/Paso1";
-import Paso2 from "./components/pasos/Paso2";
-import Paso3 from "./components/pasos/Paso3";
-import Paso4 from "./components/pasos/Paso4";
-import Paso5 from "./components/pasos/Paso5";
-import Paso6 from "./components/pasos/Paso6";
-import Paso7 from "./components/pasos/Paso7";
-import Paso8 from "./components/pasos/Paso8";
-import Paso9 from "./components/pasos/Paso9";
-import Paso10 from "./components/pasos/Paso10";
-import Paso11 from "./components/pasos/Paso11";
-import Credito from "./components/pasos/Credito";
-import Debito from "./components/pasos/Debito";
-import { setToken } from "./actions";
+import React from 'react';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { spring, AnimatedSwitch } from 'react-router-transition';
+import { createGlobalStyle } from 'styled-components';
+import { useDispatch } from 'react-redux';
+import Header from './components/Header';
+import Paso1 from './components/pasos/Paso1';
+import Paso2 from './components/pasos/Paso2';
+import Paso3 from './components/pasos/Paso3';
+import Paso4 from './components/pasos/Paso4';
+import Paso5 from './components/pasos/Paso5';
+import Paso6 from './components/pasos/Paso6';
+import Paso7 from './components/pasos/Paso7';
+import Paso8 from './components/pasos/Paso8';
+import Paso9 from './components/pasos/Paso9';
+import Paso10 from './components/pasos/Paso10';
+import Paso11 from './components/pasos/Paso11';
+import Paso12 from './components/pasos/Paso12';
+import Credito from './components/pasos/Credito';
+import Debito from './components/pasos/Debito';
+import { setToken } from './actions';
 
 function App() {
   const API_URL = process.env.REACT_APP_API_URL;
@@ -27,19 +28,19 @@ function App() {
   const dispatch = useDispatch();
 
   const myHeaders = new Headers();
-  myHeaders.append("Authorization", "Bearer {{access_token}}");
-  myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+  myHeaders.append('Authorization', 'Bearer {{access_token}}');
+  myHeaders.append('Content-Type', 'application/x-www-form-urlencoded');
 
   const urlencoded = new URLSearchParams();
-  urlencoded.append("grant_type", "client_credentials");
-  urlencoded.append("client_id", CLIENT_ID);
-  urlencoded.append("client_secret", CLIENT_SECRET);
+  urlencoded.append('grant_type', 'client_credentials');
+  urlencoded.append('client_id', CLIENT_ID);
+  urlencoded.append('client_secret', CLIENT_SECRET);
 
   const requestOptions = {
-    method: "POST",
+    method: 'POST',
     headers: myHeaders,
     body: urlencoded,
-    redirect: "follow",
+    redirect: 'follow',
   };
 
   fetch(`${API_URL}/oauth/token`, requestOptions)
@@ -47,7 +48,7 @@ function App() {
     .then((result) => {
       dispatch(setToken(result.access_token));
     })
-    .catch((error) => console.log("error", error));
+    .catch((error) => console.log('error', error));
 
   // we need to map the `scale` prop we define below
   // to the transform style property
@@ -122,6 +123,8 @@ function App() {
           <Route exact path="/tarjeta-de-credito/" component={Credito} />
 
           <Route exact path="/debito-automatico/" component={Debito} />
+
+          <Route exact path="/12/" component={Paso12} />
         </AnimatedSwitch>
       </Router>
       <GlobalStyle />

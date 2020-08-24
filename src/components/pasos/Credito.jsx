@@ -67,9 +67,11 @@ const Credito = () => {
       .then((response) => response.json())
       .then((result) => {
         console.log(result);
-        // if (result.status) {
-        //   history.push('/12/');
-        // }
+        if (result.status) {
+          history.push('/12/');
+        } else {
+          alert('Hubo un error al solicitar la emisión de póliza');
+        }
       })
       .catch((error) => console.log('error', error));
   };
