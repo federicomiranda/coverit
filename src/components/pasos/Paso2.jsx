@@ -51,6 +51,7 @@ const Paso2 = () => {
     if (localidades.length === 1) {
       setLocElegida(localidades[0].name);
       setIdLocElegida(localidades[0].id);
+      document.getElementById('btnContinue').focus();
     }
   }, [localidades]);
 
@@ -143,8 +144,7 @@ const Paso2 = () => {
                 <Link to="/">Volver</Link>
               </BtnBack>
 
-              <BtnContinue className={!locElegida ? 'disabled' : ''}>
-                {/* <BtnContinue> */}
+              <BtnContinue id="btnContinue" className={!locElegida ? 'disabled' : ''}>
                 <Link onClick={saveData} to="/3/">
                   Continuar
                 </Link>
