@@ -122,6 +122,7 @@ const Paso4 = () => {
                 onChange={handleChangeEdad}
                 value={edad}
                 maxLength="2"
+                inputMode="numeric"
               />
             </FieldSeparator>
 
@@ -134,6 +135,7 @@ const Paso4 = () => {
                 onChange={handleChangeEmail}
                 value={email}
                 maxLength="80"
+                inputMode="email"
               />
             </FieldSeparator>
 

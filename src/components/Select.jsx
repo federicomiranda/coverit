@@ -24,6 +24,7 @@ const Select = ({
       setValue('');
     } else if (
       options.length > 1
+             && type !== 'Marca'
              && type !== 'Documento'
              && type !== 'dd'
              && type !== 'mm'
@@ -404,6 +405,7 @@ const ModalSelect = styled.div`
   display: flex;
   flex-direction: column;
   overflow-y: scroll;
+  z-index: 2;
 `;
 
 const ItemModalSelect = styled.label`

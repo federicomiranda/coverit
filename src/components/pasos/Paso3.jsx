@@ -149,15 +149,21 @@ const Paso2 = () => {
   const elegirMarca = (value, id) => {
     setMarcaElegida(value);
     setIdMarcaElegida(id);
+    setModeloElegido('');
+    setAnioElegido('');
+    setVersionElegida('');
   };
 
   const elegirModelo = (value, id) => {
     setModeloElegido(value);
     setIdModeloElegido(id);
+    setAnioElegido('');
+    setVersionElegida('');
   };
 
   const elegirAnio = (value) => {
     setAnioElegido(value);
+    setVersionElegida('');
   };
 
   const elegirVersion = (value, id) => {
