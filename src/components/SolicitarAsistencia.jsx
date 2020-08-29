@@ -45,6 +45,7 @@ const SolicitarAsistencia = ({ handleAsistencia }) => {
           />
         </CerrarAsistencia>
         <AsistenciaTitle>Solicitar asistencia</AsistenciaTitle>
+        <AsistenciaText>Solicita asistencia telefónica para cotizar tu vehículo</AsistenciaText>
         <AsistenciaInput type="number" name="tel" value={cliente.tel} />
         <AsistenciaBtn onClick={solicitarAsistencia}>
           Confirmar teléfono
@@ -68,7 +69,7 @@ export default SolicitarAsistencia;
 const AsistenciaContainer = styled.div`
    position: fixed;
    left: 0;
-   top: 0;
+   top: -100px;
    width: 100%;
    height: 100vh;
    background: rgba(0, 0, 0, 0.5);
@@ -107,6 +108,14 @@ const AsistenciaTitle = styled.p`
    margin-bottom: 12px;
    text-transform: uppercase;
  `;
+
+const AsistenciaText = styled.p`
+  text-align: center;
+  color: var(--gris);
+  margin: 0 0 12px;
+  font-size: 16px;
+  font-weight: 300;
+`;
 
 const AsistenciaInput = styled.input`
    display: block;

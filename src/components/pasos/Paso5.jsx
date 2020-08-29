@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Redirect, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
+import Loader from 'react-loader-spinner';
 import ProgressBar from '../ProgressBar';
 import {
   setSolicitud,
@@ -106,6 +107,13 @@ const Paso5 = () => {
               </SumaAseguradaContainer>
 
               <EstamosCotizandoContainer>
+                <Loader
+                  type="Oval"
+                  color="#213c83"
+                  width={50}
+                  height={50}
+                  timeout={100000}
+                />
                 <EstamosCotizandoText>
                   Estamos cotizando en...
                 </EstamosCotizandoText>
@@ -193,6 +201,7 @@ const EstamosCotizandoText = styled.p`
   color: var(--azul);
   font-size: 20px;
   margin-bottom: 24px;
+  margin-top: 24px;
 `;
 
 const EstamosCotizandoImg = styled.img`
