@@ -103,6 +103,7 @@ const Paso2 = () => {
                 value={cp}
                 minLength="4"
                 maxLength="4"
+                inputMode="numeric"
               />
               {loader ? (
                 <LoaderContainer>
