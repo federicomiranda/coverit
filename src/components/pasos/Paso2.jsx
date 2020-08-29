@@ -40,6 +40,7 @@ const Paso2 = () => {
       })
         .then((response) => response.json())
         .then((result) => {
+          document.getElementById('cp').blur();
           setLocalidades(result);
           setLoader(false);
         })
@@ -51,7 +52,6 @@ const Paso2 = () => {
     if (localidades.length === 1) {
       setLocElegida(localidades[0].name);
       setIdLocElegida(localidades[0].id);
-      document.getElementById('btnContinue').focus();
     }
   }, [localidades]);
 
