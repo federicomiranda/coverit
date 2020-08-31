@@ -18,6 +18,7 @@ import Paso11 from './components/pasos/Paso11';
 import Paso12 from './components/pasos/Paso12';
 import Credito from './components/pasos/Credito';
 import Debito from './components/pasos/Debito';
+import Inspeccion from './components/pasos/Inspeccion';
 import { setToken } from './actions';
 
 function App() {
@@ -125,6 +126,8 @@ function App() {
           <Route exact path="/debito-automatico/" component={Debito} />
 
           <Route exact path="/12/" component={Paso12} />
+
+          <Route exact path="/inspeccion/" component={Inspeccion} />
         </AnimatedSwitch>
       </Router>
       <GlobalStyle />
