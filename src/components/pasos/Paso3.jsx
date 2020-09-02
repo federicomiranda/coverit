@@ -453,7 +453,7 @@ const GncFirstColumn = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 45%;
+  flex: 1;
   padding-left: 5px;
   color: var(--gris);
 `;
@@ -461,7 +461,8 @@ const GncFirstColumn = styled.div`
 const GncSecondColumn = styled.div`
   display: flex;
   align-items: center;
-  width: 50%;
+  flex: 1;
+  margin-left: 10px;
   position: relative;
 
   &::before {

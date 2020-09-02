@@ -33,6 +33,10 @@ const Paso6 = () => {
     coberturaElegidaDescripcion,
     setCoberturaElegidaDescripcion,
   ] = useState(null);
+  const [
+    franquicia,
+    setFranquicia,
+  ] = useState(null);
 
   useEffect(() => {
     setCots(solicitud.solicitud.cotizaciones);
@@ -43,9 +47,11 @@ const Paso6 = () => {
     if (!coberturaElegida) {
       setCoberturaElegida(value.nombre);
       setCoberturaElegidaDescripcion(value.descripcion);
+      setFranquicia(value.franquicia);
     } else {
       setCoberturaElegida(null);
       setCoberturaElegidaDescripcion(null);
+      setFranquicia(null);
     }
   };
 
@@ -156,6 +162,7 @@ const Paso6 = () => {
                                 cobertura = {
                                   nombre: coberturas[i].nombre,
                                   descripcion: coberturas[i].descripcion,
+                                  franquicia: cotizacion.franquicia,
                                 };
                               }
                             }
@@ -248,6 +255,12 @@ const Paso6 = () => {
                       </DetalleSumaAseguradaText>
                     </div>
                   </DetalleCobertura>
+                  {franquicia ? (
+                    <Franquicia>
+                      Franquicia: $
+                      {franquicia}
+                    </Franquicia>
+                  ) : null}
                   <DetalleDescripcion>
                     {parse(coberturaElegidaDescripcion)}
                   </DetalleDescripcion>
@@ -437,6 +450,10 @@ const BtnContinue = styled.div`
   color: #fff;
   font-size: 16px;
   text-transform: uppercase;
+
+  & a {
+    color: #fff;
+  }
 `;
 
 const BtnAsistencia = styled.button`
@@ -545,4 +562,11 @@ const NoTenemos = styled.p`
   margin-bottom: 24px;
   font-size: 18px;
   color: var(--azul);
+`;
+
+const Franquicia = styled.p`
+  color:var(--azul);
+  font-weight:600;
+  text-align: center;
+  margin: 0 0 10px;
 `;

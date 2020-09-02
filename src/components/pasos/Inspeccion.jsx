@@ -1,29 +1,59 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
-const Paso1 = () => (
-  <>
-    <Container>
-      <Title>
-        Inspección
-        {' '}
-        <TitleMod>Digital</TitleMod>
-      </Title>
+const Paso1 = () => {
+  const coberturaSeleccionada = useSelector(
+    (state) => state.coberturaSeleccionada,
+  );
 
-      <Content>
-        <TextContent>Para iniciar la inspección digital de tu vehículo, recordá que debe ser en horario diurno.</TextContent>
-        <TextContent>Tednrás que tomarle x fotos. Seguí nuestras indicaciones</TextContent>
-      </Content>
+  const [cotId, setCotId] = useState(
+    coberturaSeleccionada.id || '73909b5b-eb42-4c6a-9ce7-b3d03afdeec1',
+  );
 
-      <BtnContinue>
-        <Link to="/inspeccion/">
-          Empezar
-        </Link>
-      </BtnContinue>
-    </Container>
-  </>
-);
+  const token = useSelector((state) => state.token);
+  const BASE_URL = process.env.REACT_APP_API_URL;
+
+  useEffect(() => {
+    fetch(`${BASE_URL}/cotizacion?cotizacion_id=${cotId}`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      redirect: 'follow',
+    })
+      .then((response) => response.json())
+      .then((result) => {
+        console.log(result);
+      })
+      .catch((error) => console.log('error', error));
+  }, []);
+
+  return (
+    <>
+      <Container>
+        <Title>
+          Inspección
+          {' '}
+          <TitleMod>Digital</TitleMod>
+        </Title>
+
+        <Content>
+          <TextContent>Para iniciar la inspección digital de tu vehículo, recordá que debe ser en horario diurno.</TextContent>
+          <TextContent>Tednrás que tomarle x fotos. Seguí nuestras indicaciones</TextContent>
+        </Content>
+
+        <BtnContinue>
+          <Link to="/inspeccion/">
+            Empezar
+          </Link>
+        </BtnContinue>
+      </Container>
+    </>
+  );
+};
 
 export default Paso1;
 
