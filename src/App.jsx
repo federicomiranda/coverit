@@ -29,7 +29,6 @@ function App() {
   const dispatch = useDispatch();
 
   const myHeaders = new Headers();
-  myHeaders.append('Authorization', 'Bearer {{access_token}}');
   myHeaders.append('Content-Type', 'application/x-www-form-urlencoded');
 
   const urlencoded = new URLSearchParams();

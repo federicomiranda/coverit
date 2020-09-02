@@ -16,20 +16,22 @@ const Paso1 = () => {
   const BASE_URL = process.env.REACT_APP_API_URL;
 
   useEffect(() => {
-    fetch(`${BASE_URL}/cotizacion?cotizacion_id=${cotId}`, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      redirect: 'follow',
-    })
-      .then((response) => response.json())
-      .then((result) => {
-        console.log(result);
+    if (token) {
+      fetch(`${BASE_URL}/cotizacion?cotizacion_id=${cotId}`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        redirect: 'follow',
       })
-      .catch((error) => console.log('error', error));
-  }, []);
+        .then((response) => response.json())
+        .then((result) => {
+          console.log(result);
+        })
+        .catch((error) => console.log('error', error));
+    }
+  }, [token]);
 
   return (
     <>
