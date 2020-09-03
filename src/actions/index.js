@@ -88,3 +88,8 @@ export const setDataVehiculo = (data) => ({
   type: 'SET_DATA_VEHICULO',
   payload: data,
 });
+
+export const setCategorias = (data) => ({
+  type: 'SET_CATEGORIAS',
+  payload: data,
+});

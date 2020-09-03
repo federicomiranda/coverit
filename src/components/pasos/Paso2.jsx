@@ -187,6 +187,10 @@ const TitleMod = styled.span`
 const Form = styled.form`
   width: 90%;
   margin: auto;
+
+  @media (min-width: 1200px) {
+    width: 50%;
+  }
 `;
 
 const FieldSeparator = styled.div`

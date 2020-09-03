@@ -9,6 +9,12 @@ const ProgressBar = ({ percentaje, value }) => {
   border-radius: 3px;
   position: relative;
   overflow: hidden;
+
+  @media (min-width: 1200px) {
+    width: 50%;
+    margin: auto;
+  }
+
   &::after {
     content: "${(props) => (value || '')}";
     display: flex;

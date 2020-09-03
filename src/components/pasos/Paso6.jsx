@@ -24,6 +24,7 @@ const Paso6 = () => {
   const cp = useSelector((state) => state.cp);
   const solicitud = useSelector((state) => state.solicitud);
   const coberturas = useSelector((state) => state.coberturas);
+  const categorias = useSelector((state) => state.categorias);
 
   const [cots, setCots] = useState([]);
   const [detalle, setDetalle] = useState(false);
@@ -33,10 +34,7 @@ const Paso6 = () => {
     coberturaElegidaDescripcion,
     setCoberturaElegidaDescripcion,
   ] = useState(null);
-  const [
-    franquicia,
-    setFranquicia,
-  ] = useState(null);
+  const [franquicia, setFranquicia] = useState(null);
 
   useEffect(() => {
     setCots(solicitud.solicitud.cotizaciones);
@@ -60,7 +58,9 @@ const Paso6 = () => {
   };
 
   const handleContratacion = () => {
-    const slides = document.querySelectorAll('#cotizaciones_container li.slide');
+    const slides = document.querySelectorAll(
+      '#cotizaciones_container li.slide',
+    );
 
     let indice = 0;
     const arr_coberturas = [];
@@ -153,11 +153,25 @@ const Paso6 = () => {
                           showArrows={cots.length > 1}
                           showIndicators={cots.length > 1}
                           infiniteLoop
+                          selectedItem="4"
                         >
                           {cots.map((cotizacion) => {
-                            let cobertura = null;
+                            {
+                              /* let cobertura = null; */
+                            }
+                            let categoria = null;
 
-                            for (let i = 0; i < coberturas.length; i++) {
+                            for (let i = 0; i < categorias.length; i++) {
+                              if (
+                                categorias[i].orden
+                                == cotizacion.categoria_cobertura
+                              ) {
+                                categoria = { nombre: categorias[i].nombre };
+                              }
+                            }
+
+                            {
+                              /* for (let i = 0; i < coberturas.length; i++) {
                               if (i == cotizacion.categoria_cobertura) {
                                 cobertura = {
                                   nombre: coberturas[i].nombre,
@@ -165,6 +179,7 @@ const Paso6 = () => {
                                   franquicia: cotizacion.franquicia,
                                 };
                               }
+                            } */
                             }
 
                             return (
@@ -173,13 +188,13 @@ const Paso6 = () => {
                                 id={cotizacion.id}
                               >
                                 <CotizacionesItemCobertura>
-                                  {cobertura.nombre}
+                                  {categoria.nombre}
                                 </CotizacionesItemCobertura>
-                                <CotizacionesItemVerDetalle
+                                {/* <CotizacionesItemVerDetalle
                                   onClick={() => handleDetalle(cobertura)}
                                 >
                                   ver detalle
-                                </CotizacionesItemVerDetalle>
+                                </CotizacionesItemVerDetalle> */}
                                 <CotizacionesItemCuota>
                                   $
                                   {' '}
@@ -307,6 +322,11 @@ const DataList = styled.ul`
   display: flex;
   justify-content: space-between;
   margin-top: 12px;
+
+  @media (min-width: 1200px) {
+    width: 50%;
+    margin: 20px auto 0;
+  }
 `;
 
 const DataListItem = styled.li`
@@ -345,6 +365,11 @@ const SumaAseguradaImg = styled.img`
 
 const CotizacionesContainer = styled.div`
   min-height: 200px;
+
+  @media (min-width: 1200px) {
+    width: 20%;
+    margin: auto;
+  }
 
   & .control-dots .dot {
     opacity: 1;
@@ -565,8 +590,8 @@ const NoTenemos = styled.p`
 `;
 
 const Franquicia = styled.p`
-  color:var(--azul);
-  font-weight:600;
+  color: var(--azul);
+  font-weight: 600;
   text-align: center;
   margin: 0 0 10px;
 `;

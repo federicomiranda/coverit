@@ -4,10 +4,7 @@ import { Redirect, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import Loader from 'react-loader-spinner';
 import ProgressBar from '../ProgressBar';
-import {
-  setSolicitud,
-  setCoberturas,
-} from '../../actions';
+import { setSolicitud, setCoberturas, setCategorias } from '../../actions';
 
 import SwissMedical from '../../assets/sm_seguros.png';
 
@@ -35,6 +32,20 @@ const Paso5 = () => {
   const BASE_URL = process.env.REACT_APP_API_URL;
 
   useEffect(() => {
+    fetch(`${BASE_URL}/categorias`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      redirect: 'follow',
+    })
+      .then((response) => response.json())
+      .then((rta) => {
+        dispatch(setCategorias(rta));
+      })
+      .catch((error) => console.log('error', error));
+
     fetch(`${BASE_URL}/coberturas`, {
       method: 'GET',
       headers: {
@@ -199,6 +210,10 @@ const SumaAseguradaText = styled.p`
 const EstamosCotizandoContainer = styled.div`
   margin-top: 32px;
   text-align: center;
+
+  @media (min-width: 1200px) {
+    width: 50%;
+  }
 `;
 
 const EstamosCotizandoText = styled.p`

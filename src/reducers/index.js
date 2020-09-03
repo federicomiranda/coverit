@@ -8,6 +8,7 @@ import clienteData from './clienteData';
 import sumaAsegurada from './sumaAsegurada';
 import solicitud from './solicitud';
 import coberturas from './coberturas';
+import categorias from './categorias';
 import coberturaSeleccionada from './coberturaSeleccionada';
 import dataVehiculo from './dataVehiculo';
 
@@ -21,6 +22,7 @@ const allReducers = combineReducers({
   sumaAsegurada,
   solicitud,
   coberturas,
+  categorias,
   coberturaSeleccionada,
   dataVehiculo,
 });
