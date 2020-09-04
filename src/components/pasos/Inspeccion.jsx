@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import Loader from 'react-loader-spinner';
 
 const Paso1 = () => {
   const coberturaSeleccionada = useSelector(
@@ -9,13 +10,16 @@ const Paso1 = () => {
   );
 
   const [cotId, setCotId] = useState(
-    coberturaSeleccionada.id || '73909b5b-eb42-4c6a-9ce7-b3d03afdeec1',
+    coberturaSeleccionada.id || '0418d22a-e4ae-42ff-b430-09f6cd2e9479',
   );
+  const [cotizacion, setCotizacion] = useState({});
+  const [loading, setLoading] = useState(false);
 
   const token = useSelector((state) => state.token);
   const BASE_URL = process.env.REACT_APP_API_URL;
 
   useEffect(() => {
+    setLoading(true);
     if (token) {
       fetch(`${BASE_URL}/cotizacion?cotizacion_id=${cotId}`, {
         method: 'POST',
@@ -27,7 +31,8 @@ const Paso1 = () => {
       })
         .then((response) => response.json())
         .then((result) => {
-          console.log(result);
+          setCotizacion(result);
+          setLoading(false);
         })
         .catch((error) => console.log('error', error));
     }
@@ -42,16 +47,37 @@ const Paso1 = () => {
           <TitleMod>Digital</TitleMod>
         </Title>
 
-        <Content>
-          <TextContent>Para iniciar la inspección digital de tu vehículo, recordá que debe ser en horario diurno.</TextContent>
-          <TextContent>Tednrás que tomarle x fotos. Seguí nuestras indicaciones</TextContent>
-        </Content>
+        {loading ? (
+          <Loader
+            type="Oval"
+            color="#213c83"
+            width={50}
+            height={50}
+            timeout={100000}
+          />
+        ) : cotizacion.status ? (
+          <>
+            <Content>
+              <TextContent>Para iniciar la inspección digital de tu vehículo, recordá que debe ser en horario diurno.</TextContent>
+              <TextContent>
+                Tendrás que tomarle
+                {' '}
+                {cotizacion.solicitud.okm ? '1 foto' : '4 fotos'}
+                . Seguí nuestras indicaciones
+              </TextContent>
+            </Content>
 
-        <BtnContinue>
-          <Link to="/inspeccion/">
-            Empezar
-          </Link>
-        </BtnContinue>
+            <BtnContinue>
+              <Link to="/inspeccion/">
+                Empezar
+              </Link>
+            </BtnContinue>
+          </>
+        ) : (
+          <Content>
+            <TextContent>Ocurrió un error, por favor intente de nuevo más tarde</TextContent>
+          </Content>
+        )}
       </Container>
     </>
   );

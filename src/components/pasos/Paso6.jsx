@@ -30,19 +30,23 @@ const Paso6 = () => {
   const [detalle, setDetalle] = useState(false);
   const [asistencia, setAsistencia] = useState(false);
   const [coberturaElegida, setCoberturaElegida] = useState(null);
+  const [categoriaElegida, setCategoriaElegida] = useState(null);
   const [
     coberturaElegidaDescripcion,
     setCoberturaElegidaDescripcion,
   ] = useState(null);
   const [franquicia, setFranquicia] = useState(null);
+  const [item, setItem] = useState(null);
 
   useEffect(() => {
     setCots(solicitud.solicitud.cotizaciones);
   }, []);
 
-  const handleDetalle = (value) => {
+  const handleDetalle = (value, categoria, index) => {
     setDetalle(!detalle);
     if (!coberturaElegida) {
+      setItem(index);
+      setCategoriaElegida(categoria);
       setCoberturaElegida(value.nombre);
       setCoberturaElegidaDescripcion(value.descripcion);
       setFranquicia(value.franquicia);
@@ -153,12 +157,10 @@ const Paso6 = () => {
                           showArrows={cots.length > 1}
                           showIndicators={cots.length > 1}
                           infiniteLoop
-                          selectedItem="4"
+                          selectedItem={'' || item}
                         >
-                          {cots.map((cotizacion) => {
-                            {
-                              /* let cobertura = null; */
-                            }
+                          {cots.map((cotizacion, index) => {
+                            let cobertura = null;
                             let categoria = null;
 
                             for (let i = 0; i < categorias.length; i++) {
@@ -170,16 +172,15 @@ const Paso6 = () => {
                               }
                             }
 
-                            {
-                              /* for (let i = 0; i < coberturas.length; i++) {
-                              if (i == cotizacion.categoria_cobertura) {
+                            for (let i = 0; i < coberturas.length; i++) {
+                              if (coberturas[i].codigo == cotizacion.cobertura_id) {
                                 cobertura = {
+                                  codigo: coberturas[i].codigo,
                                   nombre: coberturas[i].nombre,
                                   descripcion: coberturas[i].descripcion,
                                   franquicia: cotizacion.franquicia,
                                 };
                               }
-                            } */
                             }
 
                             return (
@@ -188,13 +189,15 @@ const Paso6 = () => {
                                 id={cotizacion.id}
                               >
                                 <CotizacionesItemCobertura>
+                                  {cobertura.nombre}
+                                  {' - '}
                                   {categoria.nombre}
                                 </CotizacionesItemCobertura>
-                                {/* <CotizacionesItemVerDetalle
-                                  onClick={() => handleDetalle(cobertura)}
+                                <CotizacionesItemVerDetalle
+                                  onClick={() => handleDetalle(cobertura, categoria.nombre, index)}
                                 >
                                   ver detalle
-                                </CotizacionesItemVerDetalle> */}
+                                </CotizacionesItemVerDetalle>
                                 <CotizacionesItemCuota>
                                   $
                                   {' '}
@@ -258,7 +261,14 @@ const Paso6 = () => {
                     />
                   </DetalleHeader>
                   <DetalleCobertura>
-                    <CoberturaElegida>{coberturaElegida}</CoberturaElegida>
+                    <CoberturaElegida>
+                      {categoriaElegida}
+                      <span>
+                        (
+                        {coberturaElegida}
+                        )
+                      </span>
+                    </CoberturaElegida>
                     <div>
                       <DetalleSumaAsegurada>
                         $
@@ -268,6 +278,9 @@ const Paso6 = () => {
                       <DetalleSumaAseguradaText>
                         Suma asegurada
                       </DetalleSumaAseguradaText>
+                      <PolizaAnual>
+                        Póliza anual con refacturación mensual
+                      </PolizaAnual>
                     </div>
                   </DetalleCobertura>
                   {franquicia ? (
@@ -539,10 +552,15 @@ const DetalleCobertura = styled.div`
 `;
 
 const CoberturaElegida = styled.p`
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 600;
   color: var(--azul);
   text-transform: uppercase;
+
+  & span {
+    display: block;
+    font-weight: 400;
+  }
 `;
 
 const DetalleSumaAsegurada = styled.p`
@@ -558,6 +576,15 @@ const DetalleSumaAseguradaText = styled.p`
   text-transform: uppercase;
   font-size: 11px;
   text-align: center;
+`;
+
+const PolizaAnual = styled.p`
+  color: var(--azul);
+  font-weight: 500;
+  text-transform: uppercase;
+  font-size: 11px;
+  text-align: center;
+  margin-top: 10px;
 `;
 
 const DetalleDescripcion = styled.p`
