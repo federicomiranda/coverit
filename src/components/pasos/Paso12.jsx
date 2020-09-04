@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Redirect } from 'react-router-dom';
+import { Redirect, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCamera } from '@fortawesome/free-solid-svg-icons';
@@ -10,6 +10,8 @@ import ProgressBar from '../ProgressBar';
 import SwissMedical from '../../assets/sm_seguros.png';
 
 const Credito = () => {
+  const history = useHistory();
+
   const vehiculo = useSelector((state) => state.vehiculo);
   const coberturaSeleccionada = useSelector(
     (state) => state.coberturaSeleccionada,
@@ -23,7 +25,7 @@ const Credito = () => {
   };
 
   const handleContinue = () => {
-
+    history.push('/inspeccion/');
   };
 
   return (
