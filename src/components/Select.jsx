@@ -14,6 +14,7 @@ const Select = ({
   elegirOpcionaa,
   state = true,
   selectedValue,
+  tab = '',
 }) => {
   const [modal, openModal] = useState(false);
   const [value, setValue] = useState('');
@@ -113,6 +114,12 @@ const Select = ({
     }
   };
 
+  const checkTypeFocus = (data) => {
+    if (data === 'Formas de pago') {
+      openModal(true);
+    }
+  };
+
   return (
     <>
       <FieldSeparator className={type === 'Formas de pago' ? 'fdp' : ''}>
@@ -128,8 +135,10 @@ const Select = ({
               ? 'blanco'
               : ''
           }
+          tabIndex={type === 'Formas de pago' ? tab : ''}
           className={!state ? 'disabled' : ''}
           htmlFor={name}
+          onFocus={() => { checkTypeFocus(type); }}
           onClick={() => {
             openModal(true);
           }}
@@ -156,7 +165,11 @@ const Select = ({
         && modal
         && options.length > 1 && (
           <ModalSelect>
-            <InputSearch type="search" placeholder="Buscar" onChange={handleSearch} />
+            <InputSearch
+              type="search"
+              placeholder="Buscar"
+              onChange={handleSearch}
+            />
             {optionsSearch.length > 0 ? (
               <>
                 {optionsSearch.map((option) => (

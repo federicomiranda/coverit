@@ -231,8 +231,7 @@ const Paso6 = () => {
                     ) : (
                       <>
                         <NoTenemos>
-                          Actualmente no tenemos propuestas disponibles para tu
-                          cobertura...
+                          Cotización disponible únicamente por teléfono
                         </NoTenemos>
                         <BtnAsistencia onClick={() => handleAsistencia(true)}>
                           Solicitar asistencia

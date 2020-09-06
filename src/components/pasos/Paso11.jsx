@@ -175,6 +175,7 @@ const Volver = styled.div`
   background: var(--verde);
   border: 2px solid var(--verde);
   border-radius: 50%;
+  position: absolute;
 
   & svg {
     color: #fff;
@@ -209,7 +210,7 @@ const BtnAsistencia = styled.button`
 `;
 
 const Cobertura = styled.div`
-  width: 50%;
+  width: 45%;
 `;
 
 const NombreCobertura = styled.p`

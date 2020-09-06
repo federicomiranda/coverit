@@ -315,9 +315,6 @@ const BtnContinue = styled.div`
   &.disabled {
     background: var(--verde-disabled);
     border: 2px solid var(--verde-disabled);
-  }
-
-  &.disabled a {
     pointer-events: none;
   }
 `;
