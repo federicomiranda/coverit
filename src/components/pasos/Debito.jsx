@@ -1,11 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Redirect, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
+import {
+  faChevronLeft,
+  faExclamationCircle,
+} from '@fortawesome/free-solid-svg-icons';
+import Loader from 'react-loader-spinner';
 import SolicitarAsistencia from '../SolicitarAsistencia';
 import ProgressBar from '../ProgressBar';
+import Select from '../Select';
 
 import SwissMedical from '../../assets/sm_seguros.png';
 
@@ -23,6 +28,10 @@ const Debito = () => {
   const [asistencia, setAsistencia] = useState(false);
   const [nombre, setNombre] = useState('');
   const [nroTarjeta, setNroTarjeta] = useState('');
+
+  const [loading, setLoading] = useState(false);
+  const [errorTarjeta, setErrorTarjeta] = useState(false);
+  const [errorEmision, setErrorEmision] = useState(false);
 
   const handleAsistencia = (value) => {
     setAsistencia(value);
@@ -44,24 +53,47 @@ const Debito = () => {
   const BASE_URL = process.env.REACT_APP_API_URL;
 
   const handleContinue = () => {
-    fetch(
-      `${BASE_URL}/solicitar-emision?cotizacion_id=${coberturaSeleccionada.id}&tipo_documento=${cliente.dniElegido}&documento=${cliente.dniValue}&sexo=${cliente.sexo}&cuit=${cliente.CUILT}&situacion_afip=${cliente.condicionIVA}&iibb=${cliente.condicionIIBB}&patente=${dataVehiculo.patente}&chasis=${dataVehiculo.chasis}&motor=${dataVehiculo.motor}&anios_siniestros=0&calle=${cliente.calle}&numero=${cliente.nro}&vigencia_desde=2020-09-01&numero_tarjeta=${nroTarjeta}&telefono=${cliente.tel}&estado_civil=1&forma_pago=4`,
-      {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        redirect: 'follow',
+    setLoading(true);
+    setErrorTarjeta(false);
+    fetch(`${BASE_URL}/validar-cbu?cbu=${nroTarjeta}`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/x-www-form-urlencoded',
       },
-    )
+      redirect: 'follow',
+    })
       .then((response) => response.json())
       .then((result) => {
-        console.log(result);
         if (result.status) {
-          history.push('/12/');
+          setLoading(false);
+          setErrorTarjeta(false);
+
+          fetch(
+            `${BASE_URL}/solicitar-emision?cotizacion_id=${coberturaSeleccionada.id}&tipo_documento=${cliente.dniElegido}&documento=${cliente.dniValue}&sexo=${cliente.sexo}&cuit=${cliente.CUILT}&situacion_afip=${cliente.condicionIVA}&iibb=${cliente.condicionIIBB}&patente=${dataVehiculo.patente}&chasis=${dataVehiculo.chasis}&motor=${dataVehiculo.motor}&anios_siniestros=0&calle=${cliente.calle}&numero=${cliente.nro}&vigencia_desde=2020-10-01&numero_tarjeta=${nroTarjeta}&telefono=${cliente.tel}&estado_civil=1&forma_pago=19`,
+            {
+              method: 'POST',
+              headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/x-www-form-urlencoded',
+              },
+              redirect: 'follow',
+            },
+          )
+            .then((response) => response.json())
+            .then((result) => {
+              console.log(result);
+              if (result.status) {
+                history.push('/12/');
+              } else {
+                setLoading(false);
+                setErrorEmision(true);
+              }
+            })
+            .catch((error) => console.log('error', error));
         } else {
-          alert('Hubo un error al solicitar la emisión de póliza');
+          setLoading(false);
+          setErrorTarjeta(true);
         }
       })
       .catch((error) => console.log('error', error));
@@ -127,28 +159,67 @@ const Debito = () => {
                 </Data>
               </Info>
 
-              <Campos>
-                <p>
-                  Forma de pago:
-                  {' '}
-                  <span>Débito automático</span>
-                </p>
-                <FieldSeparator>
-                  <Input
-                    type="text"
-                    name="nombre"
-                    placeholder="Nombre completo"
-                    onChange={handleNombre}
-                  />
-                  <Input
-                    type="number"
-                    name="tarjeta"
-                    placeholder="CBU. Ej: 1234123412341234"
-                    onChange={handleNroTarjeta}
-                  />
-                </FieldSeparator>
-                <BtnContinue onClick={handleContinue}>Contratar</BtnContinue>
-              </Campos>
+              {!errorEmision ? (
+                <Campos>
+                  <p>
+                    Forma de pago:
+                    {' '}
+                    <span>Débito automático</span>
+                  </p>
+                  <FieldSeparator>
+                    <Input
+                      type="text"
+                      name="nombre"
+                      placeholder="Nombre"
+                      onChange={handleNombre}
+                      tabIndex="1"
+                    />
+
+                    <InputErrorContainer>
+                      <Input
+                        type="number"
+                        name="tarjeta"
+                        placeholder="CBU. Ej: 1234123412341234"
+                        onChange={handleNroTarjeta}
+                        tabIndex="2"
+                        className={errorTarjeta ? 'errorTarjeta' : ''}
+                      />
+                      {errorTarjeta && (
+                        <FontAwesomeIcon
+                          icon={faExclamationCircle}
+                          className="errorExclamation"
+                        />
+                      )}
+                    </InputErrorContainer>
+                  </FieldSeparator>
+                  <BtnContinue
+                    className={
+                      nombre && nroTarjeta ? '' : 'disabled'
+                    }
+                    onClick={handleContinue}
+                  >
+                    {loading ? (
+                      <>
+                        {'Contratando '}
+                        <Loader
+                          type="ThreeDots"
+                          color="#ffffff"
+                          width={25}
+                          height={8}
+                          timeout={50000}
+                        />
+                      </>
+                    ) : (
+                      'Contratar'
+                    )}
+                  </BtnContinue>
+                </Campos>
+              ) : (
+                <TextErrorEmision>
+                  Error al solicitar la emisión de póliza, por favor solicite
+                  asistencia.
+                </TextErrorEmision>
+              )}
 
               <BtnAsistencia onClick={() => handleAsistencia(true)}>
                 Solicitar asistencia
@@ -220,6 +291,7 @@ const Volver = styled.div`
   background: var(--verde);
   border: 2px solid var(--verde);
   border-radius: 50%;
+  position: absolute;
 
   & svg {
     color: #fff;
@@ -238,6 +310,15 @@ const BtnContinue = styled.div`
   font-size: 16px;
   text-transform: uppercase;
   font-weight: 600;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+
+  &.disabled {
+    background: var(--verde-disabled);
+    border: 2px solid var(--verde-disabled);
+    pointer-events: none;
+  }
 `;
 
 const BtnAsistencia = styled.button`
@@ -255,7 +336,7 @@ const BtnAsistencia = styled.button`
 `;
 
 const Cobertura = styled.div`
-  width: 50%;
+  width: 45%;
 `;
 
 const NombreCobertura = styled.p`
@@ -348,6 +429,23 @@ const FieldSeparator = styled.div`
   flex-wrap: wrap;
 `;
 
+const InputErrorContainer = styled.div`
+  position: relative;
+  width: 100%;
+
+  & > input {
+    margin-bottom: 0;
+  }
+
+  .errorExclamation {
+    color: #f55b5b;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    font-size: 20px;
+  }
+`;
+
 const Input = styled.input`
   display: block;
   width: 100%;
@@ -360,8 +458,9 @@ const Input = styled.input`
   outline: none;
   margin-bottom: 24px;
 
-  &:last-of-type {
-    margin-bottom: 0;
+  &.errorTarjeta {
+    border: 1px solid #f55b5b;
+    color: #f55b5b;
   }
 
   &::placeholder {
@@ -379,4 +478,14 @@ const Input = styled.input`
     color: rgba(255, 255, 255, 0.3);
     font-weight: 300;
   }
+`;
+
+const TextErrorEmision = styled.p`
+  color: #fff;
+  font-size: 18px;
+  text-align: center;
+  line-height: 1.3;
+  font-weight: 300;
+  background: #cc2b2b;
+  padding: 10px;
 `;

@@ -362,90 +362,99 @@ const Paso9 = () => {
 
                     <FechaDeNacimiento>Fecha de nacimiento</FechaDeNacimiento>
 
-                    <Select
-                      type="dd"
-                      name="dd"
-                      options={[
-                        1,
-                        2,
-                        3,
-                        4,
-                        5,
-                        6,
-                        7,
-                        8,
-                        9,
-                        10,
-                        11,
-                        12,
-                        13,
-                        14,
-                        15,
-                        16,
-                        17,
-                        18,
-                        19,
-                        20,
-                        21,
-                        22,
-                        23,
-                        24,
-                        25,
-                        26,
-                        27,
-                        28,
-                        29,
-                        30,
-                        31,
-                      ]}
-                      elegirOpciondd={elegirdd}
-                      selectedValue={ddElegido}
-                    />
+                    <Row>
+                      <Select
+                        type="dd"
+                        name="dd"
+                        options={[
+                          1,
+                          2,
+                          3,
+                          4,
+                          5,
+                          6,
+                          7,
+                          8,
+                          9,
+                          10,
+                          11,
+                          12,
+                          13,
+                          14,
+                          15,
+                          16,
+                          17,
+                          18,
+                          19,
+                          20,
+                          21,
+                          22,
+                          23,
+                          24,
+                          25,
+                          26,
+                          27,
+                          28,
+                          29,
+                          30,
+                          31,
+                        ]}
+                        elegirOpciondd={elegirdd}
+                        selectedValue={ddElegido}
+                        className="rowItem"
+                      />
 
-                    <Select
-                      type="mm"
-                      name="mm"
-                      options={[
-                        'Enero',
-                        'Febrero',
-                        'Marzo',
-                        'Abril',
-                        'Mayo',
-                        'Junio',
-                        'Julio',
-                        'Agosto',
-                        'Septiembre',
-                        'Octubre',
-                        'Noviembre',
-                        'Diciembre',
-                      ]}
-                      elegirOpcionmm={elegirmm}
-                      selectedValue={mmElegido}
-                    />
+                      <Select
+                        type="mm"
+                        name="mm"
+                        options={[
+                          'Enero',
+                          'Febrero',
+                          'Marzo',
+                          'Abril',
+                          'Mayo',
+                          'Junio',
+                          'Julio',
+                          'Agosto',
+                          'Septiembre',
+                          'Octubre',
+                          'Noviembre',
+                          'Diciembre',
+                        ]}
+                        elegirOpcionmm={elegirmm}
+                        selectedValue={mmElegido}
+                        className="rowItem"
+                      />
 
-                    <Select
-                      type="aa"
-                      name="aa"
-                      options={array_aa}
-                      elegirOpcionaa={elegiraa}
-                      selectedValue={aaElegido}
-                    />
+                      <Select
+                        type="aa"
+                        name="aa"
+                        options={array_aa}
+                        elegirOpcionaa={elegiraa}
+                        selectedValue={aaElegido}
+                        className="rowItem"
+                      />
+                    </Row>
 
-                    <Select
-                      type="Nacionalidad"
-                      name="Nacionalidad"
-                      options={paises || []}
-                      elegirOpcion={elegirPais}
-                      selectedValue={paisElegido}
-                    />
+                    <RowDos>
+                      <Select
+                        type="Nacionalidad"
+                        name="Nacionalidad"
+                        options={paises || []}
+                        elegirOpcion={elegirPais}
+                        selectedValue={paisElegido}
+                        className="rowDosItem"
+                      />
 
-                    <Select
-                      type="Sexo"
-                      name="Sexo"
-                      options={sexos || []}
-                      elegirOpcion={elegirSexo}
-                      selectedValue={sexoElegido}
-                    />
+                      <Select
+                        type="Sexo"
+                        name="Sexo"
+                        options={sexos || []}
+                        elegirOpcion={elegirSexo}
+                        selectedValue={sexoElegido}
+                        className="rowDosItem"
+                      />
+                    </RowDos>
                   </Form>
 
                   <BtnContinue
@@ -762,5 +771,31 @@ const Label = styled.p`
 
   & + div {
     width: 50%;
+  }
+`;
+
+const Row = styled.div`
+  display: flex;
+  justify-content: space-between;
+
+  & > div {
+    flex: 1;
+  }
+
+  & > div:nth-child(2) {
+    margin: 0 12px;
+  }
+`;
+
+const RowDos = styled.div`
+  display: flex;
+  justify-content: space-between;
+
+  & > div {
+    flex: 1;
+  }
+
+  & > div:last-child {
+    margin-left: 12px;
   }
 `;
