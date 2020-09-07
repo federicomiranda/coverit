@@ -93,3 +93,8 @@ export const setCategorias = (data) => ({
   type: 'SET_CATEGORIAS',
   payload: data,
 });
+
+export const setVigencia = (data) => ({
+  type: 'SET_VIGENCIA',
+  payload: data,
+});

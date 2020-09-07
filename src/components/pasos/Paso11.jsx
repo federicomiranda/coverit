@@ -1,22 +1,38 @@
-import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { Redirect, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
+import { faChevronLeft, faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
+import Calendar from 'react-calendar';
+import moment from 'moment';
 import SolicitarAsistencia from '../SolicitarAsistencia';
 import ProgressBar from '../ProgressBar';
 
 import SwissMedical from '../../assets/sm_seguros.png';
+import 'react-calendar/dist/Calendar.css';
+
+import { setVigencia } from '../../actions';
 
 const Paso11 = () => {
+  const dispatch = useDispatch();
   const history = useHistory();
 
   const vehiculo = useSelector((state) => state.vehiculo);
-  const coberturaSeleccionada = useSelector((state) => state.coberturaSeleccionada);
+  const coberturaSeleccionada = useSelector(
+    (state) => state.coberturaSeleccionada,
+  );
   const sumaAsegurada = useSelector((state) => state.sumaAsegurada);
 
   const [asistencia, setAsistencia] = useState(false);
+  const [date, setDate] = useState(moment().format('YYYY-MM-DD'));
+  const [calendar, setCalendar] = useState(false);
+  const [future, setFuture] = useState(new Date());
+
+  useEffect(() => {
+    const limitDate = new Date().setDate(future.getDate() + 30);
+    setFuture(new Date(limitDate));
+  }, []);
 
   const handleAsistencia = (value) => {
     setAsistencia(value);
@@ -27,11 +43,17 @@ const Paso11 = () => {
   };
 
   const handleContinue = (tipo) => {
+    dispatch(setVigencia(date));
     if (tipo === 'credito') {
       history.push('/tarjeta-de-credito/');
     } else if (tipo === 'debito') {
       history.push('/debito-automatico/');
     }
+  };
+
+  const dateChange = (value) => {
+    setDate(moment(value).format('YYYY-MM-DD'));
+    setCalendar(false);
   };
 
   return (
@@ -60,7 +82,9 @@ const Paso11 = () => {
 
                 <Data>
                   <Cobertura>
-                    <NombreCobertura>{coberturaSeleccionada.nombre}</NombreCobertura>
+                    <NombreCobertura>
+                      {coberturaSeleccionada.nombre}
+                    </NombreCobertura>
                     <SumaAsegurada>
                       <span>
                         $
@@ -87,20 +111,46 @@ const Paso11 = () => {
                       </p>
                       <span>35% OFF</span>
                     </Descuento>
-                    <LogoImg
-                      src={SwissMedical}
-                      alt="Swiss Medical Seguros"
-                    />
+                    <LogoImg src={SwissMedical} alt="Swiss Medical Seguros" />
                   </DetalleCuota>
                 </Data>
+
+                <VigenciaContainer>
+                  <Label>Vigencia desde:</Label>
+                  <InputContainer
+                    onClick={() => {
+                      setCalendar(true);
+                    }}
+                  >
+                    <Input type="text" readOnly id="fecha" value={date} />
+                    <FontAwesomeIcon icon={faCalendarAlt} />
+                  </InputContainer>
+                </VigenciaContainer>
+                {calendar && (
+                  <Calendar
+                    className="vigenciaCalendar"
+                    onChange={dateChange}
+                    value={new Date()}
+                    minDate={new Date()}
+                    maxDate={future}
+                  />
+                )}
               </Info>
 
               <Btns>
                 <p>Forma de pago:</p>
-                <BtnContinue onClick={() => { handleContinue('credito'); }}>
+                <BtnContinue
+                  onClick={() => {
+                    handleContinue('credito');
+                  }}
+                >
                   Tarjeta de Crédito
                 </BtnContinue>
-                <BtnContinue onClick={() => { handleContinue('debito'); }}>
+                <BtnContinue
+                  onClick={() => {
+                    handleContinue('debito');
+                  }}
+                >
                   Débito automático
                 </BtnContinue>
               </Btns>
@@ -157,6 +207,69 @@ const Info = styled.div`
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
+  flex-wrap: wrap;
+
+  & .vigenciaCalendar {
+    position: absolute;
+    left: calc(50% - 175px);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.7);
+    z-index: 10;
+    width: 350px;
+  }
+`;
+
+const VigenciaContainer = styled.div`
+  display: flex;
+  width: 100%;
+  align-items: center;
+  margin-bottom: 24px;
+`;
+
+const Label = styled.label`
+  color: #fff;
+  font-size: 18px;
+  flex: 1;
+  margin-right: 12px;
+`;
+
+const InputContainer = styled.div`
+  flex: 1;
+  width: 100%;
+  position: relative;
+
+  & svg {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    color: #fff;
+  }
+`;
+
+const Input = styled.input`
+  width: 100%;
+  font-size: 18px;
+  color: #fff;
+  padding: 10px;
+  font-weight: 300;
+  outline: none;
+  background: var(--verde);
+  border: none;
+
+  &::placeholder {
+    color: rgba(255, 255, 255, 0.3);
+    opacity: 1;
+    font-weight: 300;
+  }
+
+  &:-ms-input-placeholder {
+    color: rgba(255, 255, 255, 0.3);
+    font-weight: 300;
+  }
+
+  &::-ms-input-placeholder {
+    color: rgba(255, 255, 255, 0.3);
+    font-weight: 300;
+  }
 `;
 
 const Data = styled.div`

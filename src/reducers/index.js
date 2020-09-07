@@ -11,6 +11,7 @@ import coberturas from './coberturas';
 import categorias from './categorias';
 import coberturaSeleccionada from './coberturaSeleccionada';
 import dataVehiculo from './dataVehiculo';
+import vigencia from './vigencia';
 
 const allReducers = combineReducers({
   token: tokenReducer,
@@ -25,6 +26,7 @@ const allReducers = combineReducers({
   categorias,
   coberturaSeleccionada,
   dataVehiculo,
+  vigencia,
 });
 
 export default allReducers;

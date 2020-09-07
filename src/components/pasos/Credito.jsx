@@ -15,6 +15,7 @@ const Credito = () => {
   const history = useHistory();
 
   const vehiculo = useSelector((state) => state.vehiculo);
+  const vigencia = useSelector((state) => state.vigencia);
   const coberturaSeleccionada = useSelector(
     (state) => state.coberturaSeleccionada,
   );
@@ -75,7 +76,7 @@ const Credito = () => {
           setErrorTarjeta(false);
 
           fetch(
-            `${BASE_URL}/solicitar-emision?cotizacion_id=${coberturaSeleccionada.id}&tipo_documento=${cliente.dniElegido}&documento=${cliente.dniValue}&sexo=${cliente.sexo}&cuit=${cliente.CUILT}&situacion_afip=${cliente.condicionIVA}&iibb=${cliente.condicionIIBB}&patente=${dataVehiculo.patente}&chasis=${dataVehiculo.chasis}&motor=${dataVehiculo.motor}&anios_siniestros=0&calle=${cliente.calle}&numero=${cliente.nro}&vigencia_desde=2020-10-01&numero_tarjeta=${nroTarjeta}&telefono=${cliente.tel}&estado_civil=1&forma_pago=${idFormaPagoElegida}`,
+            `${BASE_URL}/solicitar-emision?cotizacion_id=${coberturaSeleccionada.id}&tipo_documento=${cliente.dniElegido}&documento=${cliente.dniValue}&sexo=${cliente.sexo}&cuit=${cliente.CUILT}&situacion_afip=${cliente.condicionIVA}&iibb=${cliente.condicionIIBB}&patente=${dataVehiculo.patente}&chasis=${dataVehiculo.chasis}&motor=${dataVehiculo.motor}&anios_siniestros=0&calle=${cliente.calle}&numero=${cliente.nro}&vigencia_desde=${vigencia}&numero_tarjeta=${nroTarjeta}&telefono=${cliente.tel}&estado_civil=1&forma_pago=${idFormaPagoElegida}`,
             {
               method: 'POST',
               headers: {
