@@ -70,7 +70,7 @@ const Paso5 = () => {
       .catch((error) => console.log('error', error));
 
     fetch(
-      `${BASE_URL}/cotizar?nombre=${cliente.nombre}&apellido=${cliente.apellido}&edad=${cliente.edad}&email=${cliente.email}&celular=${cliente.tel}&localidad_id=${localidad.idLocElegida}&version_id=${asegurar.idVersionElegida}&anio=${asegurar.anioElegido}&tipo=${tipoVehiculo}&tipo_uso=particular`,
+      `${BASE_URL}/cotizar?nombre=${cliente.nombre}&apellido=${cliente.apellido}&edad=${cliente.edad}&email=${cliente.email}&celular=${cliente.tel}&localidad_id=${localidad.idLocElegida}&version_id=${asegurar.idVersionElegida}&anio=${asegurar.anioElegido}&tipo=${tipoVehiculo}&tipo_uso=particular&granizo=1`,
       {
         method: 'POST',
         headers: {

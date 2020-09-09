@@ -10,7 +10,7 @@ const Paso1 = () => {
   );
 
   const [cotId, setCotId] = useState(
-    coberturaSeleccionada.id || '0418d22a-e4ae-42ff-b430-09f6cd2e9479',
+    coberturaSeleccionada.id || '5a4add80-01d3-4d8a-b04d-e68eddc10486',
   );
   const [cotizacion, setCotizacion] = useState({});
   const [loading, setLoading] = useState(false);

@@ -46,6 +46,8 @@ const Paso7 = () => {
                   , estás por contratar 100% online
                   {' '}
                   {coberturaSeleccionada.nombre}
+                  {' - '}
+                  {coberturaSeleccionada.categoria}
                   {' '}
                   para tu
                   {' '}

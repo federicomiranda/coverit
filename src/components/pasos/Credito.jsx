@@ -116,7 +116,15 @@ const Credito = () => {
     })
       .then((response) => response.json())
       .then((result) => {
-        setFormasPagos(result);
+        const arr = [];
+        for (let i = 0; i < result.length; i++) {
+          if (result[i].value !== 'Otros') {
+            if (!arr.includes(result[i].value)) {
+              arr.push(result[i]);
+            }
+          }
+        }
+        setFormasPagos(arr);
       })
       .catch((error) => console.log('error', error));
   }, []);

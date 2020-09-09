@@ -80,6 +80,17 @@ const Paso6 = () => {
         }
 
         cots.map((cotizacion) => {
+          let categoriaDispatch = null;
+
+          for (let i = 0; i < categorias.length; i++) {
+            if (
+              categorias[i].orden
+              == cotizacion.categoria_cobertura
+            ) {
+              categoriaDispatch = categorias[i].nombre;
+            }
+          }
+
           for (let i = 0; i < coberturas.length; i++) {
             if (i == cotizacion.categoria_cobertura) {
               arr_coberturas.push({
@@ -87,6 +98,7 @@ const Paso6 = () => {
                 nombre: coberturas[i].nombre,
                 descripcion: coberturas[i].descripcion,
                 cuota: cotizacion.cuota,
+                categoria: categoriaDispatch,
               });
             }
           }

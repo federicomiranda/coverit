@@ -83,14 +83,21 @@ const Paso11 = () => {
                 <Data>
                   <Cobertura>
                     <NombreCobertura>
-                      {coberturaSeleccionada.nombre}
+                      COBERTURA
+                      {' '}
+                      {coberturaSeleccionada.categoria}
+                      <span>
+                        (
+                        {coberturaSeleccionada.nombre}
+                        )
+                      </span>
                     </NombreCobertura>
                     <SumaAsegurada>
                       <span>
                         $
                         {new Intl.NumberFormat('de-DE').format(sumaAsegurada)}
                       </span>
-                      suma asegurada
+                      <p>suma asegurada</p>
                     </SumaAsegurada>
                   </Cobertura>
 
@@ -330,12 +337,19 @@ const NombreCobertura = styled.p`
   color: #fff;
   font-weight: 500;
   font-size: 20px;
+  text-transform: uppercase; 
+
+  & span {
+    display: block;
+    font-weight: 400;
+  }
 `;
 
 const SumaAsegurada = styled.p`
   color: #fff;
   font-weight: 300;
   font-size: 16px;
+  text-transform: uppercase;
 `;
 
 const DetalleCuota = styled.div`
