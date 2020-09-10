@@ -62,13 +62,13 @@ const Paso1 = () => {
               <TextContent>
                 Tendrás que tomarle
                 {' '}
-                {cotizacion.solicitud.okm ? '1 foto' : '4 fotos'}
+                {cotizacion.solicitud.okm ? '1 foto' : '6 fotos'}
                 . Seguí nuestras indicaciones
               </TextContent>
             </Content>
 
             <BtnContinue>
-              <Link to="/inspeccion/">
+              <Link to="/inspeccion/fotos/1">
                 Empezar
               </Link>
             </BtnContinue>

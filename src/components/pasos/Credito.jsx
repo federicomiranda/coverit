@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { Redirect, useHistory } from 'react-router-dom';
+import { Redirect, useHistory, Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft, faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
@@ -168,7 +168,8 @@ const Credito = () => {
                         $
                         {new Intl.NumberFormat('de-DE').format(sumaAsegurada)}
                       </span>
-                      suma asegurada
+                      {' '}
+                      <span>suma asegurada</span>
                     </SumaAsegurada>
                   </Cobertura>
 
@@ -236,30 +237,50 @@ const Credito = () => {
                       )}
                     </InputErrorContainer>
                   </FieldSeparator>
-                  <BtnContinue
-                    className={
-                      nombre && nroTarjeta && formaPagoElegida ? '' : 'disabled'
-                    }
-                    onClick={handleContinue}
-                  >
-                    {loading ? (
-                      <>
-                        {'Contratando '}
-                        <Loader
-                          type="ThreeDots"
-                          color="#ffffff"
-                          width={25}
-                          height={8}
-                          timeout={50000}
-                        />
-                      </>
-                    ) : (
-                      'Contratar'
-                    )}
-                  </BtnContinue>
+                  <Btns>
+                    <BtnsQuestion>
+                      ¿Desea realizar la inspección ahora o continuar más tarde?
+                    </BtnsQuestion>
+                    <BtnContinue
+                      id="inspeccion"
+                      className={
+                        nombre && nroTarjeta && formaPagoElegida
+                          ? ''
+                          : 'disabled'
+                      }
+                    >
+                      <Link to="/inspeccion">Ir ahora</Link>
+                    </BtnContinue>
+                    <BtnContinue
+                      className={
+                        nombre && nroTarjeta && formaPagoElegida
+                          ? ''
+                          : 'disabled'
+                      }
+                      onClick={handleContinue}
+                    >
+                      {loading ? (
+                        <>
+                          {'Finalizando '}
+                          <Loader
+                            type="Oval"
+                            color="#ffffff"
+                            width={30}
+                            height={20}
+                            timeout={50000}
+                          />
+                        </>
+                      ) : (
+                        'Más tarde'
+                      )}
+                    </BtnContinue>
+                  </Btns>
                 </Campos>
               ) : (
-                <TextErrorEmision>Error al solicitar la emisión de póliza, por favor solicite asistencia.</TextErrorEmision>
+                <TextErrorEmision>
+                  Error al solicitar la emisión de póliza, por favor solicite
+                  asistencia.
+                </TextErrorEmision>
               )}
 
               <BtnAsistencia onClick={() => handleAsistencia(true)}>
@@ -339,13 +360,25 @@ const Volver = styled.div`
   }
 `;
 
+const Btns = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+`;
+
+const BtnsQuestion = styled.p`
+  font-weight: 500;
+  width: 100%;
+  font-size: 18px !important;
+  text-align: center;
+`;
+
 const BtnContinue = styled.div`
+  flex: 1;
   background: var(--verde);
   border: none;
   padding: 10px 20px;
   text-align: center;
   border: 2px solid var(--verde);
-  display: block;
   width: 100%;
   color: #fff;
   font-size: 16px;
@@ -353,7 +386,15 @@ const BtnContinue = styled.div`
   font-weight: 600;
   display: flex;
   justify-content: center;
-  align-items: flex-end;
+  align-items: center;
+
+  a {
+    color: #fff;
+  }
+
+  &#inspeccion {
+    margin-right: 5px;
+  }
 
   &.disabled {
     background: var(--verde-disabled);
@@ -390,6 +431,11 @@ const SumaAsegurada = styled.p`
   color: #fff;
   font-weight: 300;
   font-size: 16px;
+  text-transform: uppercase;
+
+  span {
+    display: block;
+  }
 `;
 
 const DetalleCuota = styled.div`

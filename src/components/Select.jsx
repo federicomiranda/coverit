@@ -338,14 +338,14 @@ const Select = ({
         <ModalSelect>
           {options.map((option) => (
             <ItemModalSelect
-              onClick={() => handleSelectFormasPagos(option.value, option.name)}
+              onClick={() => handleSelectFormasPagos(option.description, option.name)}
               key={option.id}
             >
-              {option.value}
+              {option.description}
               <InputModalSelect
                 type="radio"
                 name={name}
-                value={option.value}
+                value={option.description}
               />
             </ItemModalSelect>
           ))}
