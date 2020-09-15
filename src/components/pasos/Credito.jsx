@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Redirect, useHistory, Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -8,11 +8,14 @@ import Loader from 'react-loader-spinner';
 import SolicitarAsistencia from '../SolicitarAsistencia';
 import ProgressBar from '../ProgressBar';
 import Select from '../Select';
+import { setDataTarjeta } from '../../actions';
 
 import SwissMedical from '../../assets/sm_seguros.png';
 
 const Credito = () => {
   const history = useHistory();
+
+  const dispatch = useDispatch();
 
   const vehiculo = useSelector((state) => state.vehiculo);
   const vigencia = useSelector((state) => state.vigencia);
@@ -88,7 +91,6 @@ const Credito = () => {
           )
             .then((response) => response.json())
             .then((result) => {
-              console.log(result);
               if (result.status) {
                 history.push('/12/');
               } else {
@@ -103,6 +105,18 @@ const Credito = () => {
         }
       })
       .catch((error) => console.log('error', error));
+  };
+
+  const handleContinueInspeccion = () => {
+    dispatch(
+      setDataTarjeta({
+        nombre,
+        nroTarjeta,
+        formaPagoElegida,
+        idFormaPagoElegida,
+      }),
+    );
+    history.push(`/inspeccion/${coberturaSeleccionada.id}/e`);
   };
 
   useEffect(() => {
@@ -248,8 +262,9 @@ const Credito = () => {
                           ? ''
                           : 'disabled'
                       }
+                      onClick={handleContinueInspeccion}
                     >
-                      <Link to="/inspeccion">Ir ahora</Link>
+                      Ir ahora
                     </BtnContinue>
                     <BtnContinue
                       className={

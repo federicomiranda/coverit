@@ -98,3 +98,13 @@ export const setVigencia = (data) => ({
   type: 'SET_VIGENCIA',
   payload: data,
 });
+
+export const setDataTarjeta = (data) => ({
+  type: 'SET_DATA_TARJETA',
+  payload: data,
+});
+
+export const setInspeccionData = (data) => ({
+  type: 'SET_INSPECCION_DATA',
+  payload: data,
+});

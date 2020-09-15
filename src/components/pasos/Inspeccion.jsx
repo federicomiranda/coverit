@@ -1,19 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { useParams, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import Loader from 'react-loader-spinner';
+import { setInspeccionData } from '../../actions';
 
-const Paso1 = () => {
-  const coberturaSeleccionada = useSelector(
-    (state) => state.coberturaSeleccionada,
-  );
-
-  const [cotId, setCotId] = useState(
-    coberturaSeleccionada.id || '5a4add80-01d3-4d8a-b04d-e68eddc10486',
-  );
+const Inspeccion = () => {
+  const dispatch = useDispatch();
+  const history = useHistory();
+  const { id, prev } = useParams();
   const [cotizacion, setCotizacion] = useState({});
   const [loading, setLoading] = useState(false);
+  const [emitir, setEmitir] = useState(false);
+
+  useEffect(() => {
+    if (prev) {
+      setEmitir(true);
+    } else {
+      setEmitir(false);
+    }
+  }, []);
 
   const token = useSelector((state) => state.token);
   const BASE_URL = process.env.REACT_APP_API_URL;
@@ -21,7 +27,7 @@ const Paso1 = () => {
   useEffect(() => {
     setLoading(true);
     if (token) {
-      fetch(`${BASE_URL}/cotizacion?cotizacion_id=${cotId}`, {
+      fetch(`${BASE_URL}/cotizacion?cotizacion_id=${id}`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -37,6 +43,20 @@ const Paso1 = () => {
         .catch((error) => console.log('error', error));
     }
   }, [token]);
+
+  useEffect(() => {
+    dispatch(
+      setInspeccionData({
+        id,
+        cotizacion,
+        emitir,
+      }),
+    );
+  }, [cotizacion]);
+
+  const handleClickStart = () => {
+    history.push(`/inspeccion/fotos/${id}`);
+  };
 
   return (
     <>
@@ -67,10 +87,8 @@ const Paso1 = () => {
               </TextContent>
             </Content>
 
-            <BtnContinue>
-              <Link to="/inspeccion/fotos/1">
-                Empezar
-              </Link>
+            <BtnContinue onClick={handleClickStart}>
+              Empezar
             </BtnContinue>
           </>
         ) : (
@@ -83,7 +101,7 @@ const Paso1 = () => {
   );
 };
 
-export default Paso1;
+export default Inspeccion;
 
 /*
  *
@@ -134,10 +152,7 @@ const BtnContinue = styled.div`
   text-align: center;
   display: block;
   width: 100%;
-
-  & a {
-    color: #fff;
-    font-size: 16px;
-    text-transform: uppercase;
-  }
+  color: #fff;
+  font-size: 16px;
+  text-transform: uppercase;
 `;
